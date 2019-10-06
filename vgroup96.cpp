@@ -35,8 +35,8 @@
 #endif
 
 #define BACKLOG  5          // Allowed length of queue of waiting connections
-#define PORT 9696
-#define GROUP "V_Group_96"
+#define PORT 5959
+#define GROUP "V_Group_1"
 
 // Simple class for handling connections from clients.
 //
