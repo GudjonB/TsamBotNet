@@ -35,7 +35,8 @@
 #endif
 
 #define BACKLOG  5          // Allowed length of queue of waiting connections
-#define PORT 9696
+#define PORT 5959
+#define GROUP "V_Group_1"
 
 // Simple class for handling connections from clients.
 //
@@ -182,11 +183,7 @@ void closeServer(int serverSocket, fd_set *openSockets, int *maxfds)
 int connectToServer(std::string portno, std::string ipAddress)
 {
    struct addrinfo hints, *svr;              // Network host entry for server
-   //struct sockaddr_in server_addr;           // Socket address for server
-   int serverSocket;                         // Socket used for server 
-   //int nwrite;                               // No. bytes written to server
-   //char buffer[1025];                        // buffer for writing to server
-   //bool finished;                   
+   int serverSocket;                         // Socket used for server                  
    int set = 1;                              // Toggle for setsockopt
 
    memset(&hints,   0, sizeof(hints));
@@ -203,6 +200,11 @@ int connectToServer(std::string portno, std::string ipAddress)
 
    serverSocket = socket(svr->ai_family, svr->ai_socktype, svr->ai_protocol);
 
+   std::string sending = "";
+   sending += '\x01';
+   sending += sprintf("CONNECT %s",GROUP);
+   sending += '\x04';
+   send(serverSocket, sending.c_str(), sending.length(),0);
    // Turn on SO_REUSEADDR to allow socket to be quickly reused after 
    // program exit.
 
@@ -319,7 +321,7 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
       *maxfds = std::max(*maxfds, serverSocket);
       std::string sending = "";
       sending += '\x01';
-      sending += "ACCEPTED,solvi";
+      sending += sprintf("ACCEPTED,%s",GROUP);
       sending += '\x04';
       send(serverSocket, sending.c_str(), sending.length(),0);
       std::cout << "Connected to server on socket: " << serverSocket << std::endl;
@@ -361,7 +363,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
 
      }
   }
-    if((tokens[0].compare("ACCEPTED") == 0) && (tokens.size() == 2))
+  if((tokens[0].compare("ACCEPTED") == 0) && (tokens.size() == 2))
   {
 
     servers[serverSocket]->name = tokens[1];

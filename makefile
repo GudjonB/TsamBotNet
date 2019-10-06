@@ -6,4 +6,4 @@ clean:
 	rm -f client
 	rm -f vgroup96
 run:
-	sudo ./server 6969
+	sudo ./vgroup96 6969
