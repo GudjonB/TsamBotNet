@@ -218,7 +218,7 @@ int connectToServer(std::string portno, std::string ipAddress)
 
    std::string sending = "";
    sending += '\x01';
-   sending += "CONNECT ";
+   sending += "CONNECT,";
    sending += GROUP;
    sending += '\x04';
    send(serverSocket, sending.c_str(), sending.length(),0);
@@ -324,11 +324,24 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
       *maxfds = std::max(*maxfds, serverSocket);
       std::string sending = "";
       sending += '\x01';
-      sending += "CONNECT ";
+      sending += "CONNECT,";
       sending += GROUP;
       sending += '\x04';
       send(serverSocket, sending.c_str(), sending.length(),0);
       std::cout << "Connected to server on socket: " << serverSocket << std::endl;
+  }
+  else if((tokens[0].compare("LISTSERVERS") == 0) && (tokens.size() == 1))
+  {
+     std::string msg;
+
+     for(auto const& server : servers){
+        msg +="SERVERS " + server.second->name + "," + server.second->ip + "," + server.second->port + ";";
+     }
+     
+     // Reducing the msg length by 1 loses the excess "," - which
+     // granted is totally cheating.
+     send(clientSocket, msg.c_str(), msg.length()-1, 0);
+
   }
   else
   {
@@ -381,7 +394,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
         servers[serverSocket]->name = tokens[1];
         std::string sending = "";
         sending += '\x01';
-        sending += "ACCEPT ";
+        sending += "ACCEPT,";
         sending += GROUP;
         sending += '\x04';
         send(serverSocket, sending.c_str(), sending.length(),0);
@@ -390,7 +403,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
     else{
         std::string sending = "";
         sending += '\x01';
-        sending += "DECLINE ";
+        sending += "DECLINE,";
         sending += GROUP;
         sending += '\x04';
         send(serverSocket, sending.c_str(), sending.length(),0);
@@ -457,7 +470,7 @@ int main(int argc, char* argv[])
     listenSock = open_socket(atoi(argv[1])); 
     listenLocalSock = open_socket(PORT); 
     printf("Listening on port: %d\n", atoi(argv[1]));
-    printf("Listening on Loacl port: %d\n", PORT);
+    printf("Listening on Local port: %d\n", PORT);
 
     if(listen(listenSock, BACKLOG) < 0)
     {
