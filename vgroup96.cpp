@@ -35,8 +35,13 @@
 #endif
 
 #define BACKLOG  5          // Allowed length of queue of waiting connections
+<<<<<<< HEAD
 #define PORT 5959
 #define GROUP "V_Group_1"
+=======
+#define PORT 9696
+#define GROUP "V_Group_96"
+>>>>>>> c3a7c0ef1135e8f9edfb5b0c723b00bf7a864b64
 
 // Simple class for handling connections from clients.
 //
@@ -306,7 +311,9 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
           if(pair.second->name.compare(tokens[1]) == 0)
           {
               std::string msg;
+              std::string group(GROUP);
               msg += '\x01';
+              msg += "SEND_MSG," + group + "," + tokens[1] + ",";
               for(auto i = tokens.begin()+2;i != tokens.end();i++) 
               {
                   msg += *i + " ";
@@ -434,6 +441,14 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
      send(serverSocket, msg.c_str(), msg.length()-1, 0);
 
   }
+  else if((tokens[0].compare("SEND_MSG") == 0) && (tokens.size() == 4))
+  {
+      std::string msg = "";
+      msg += tokens[1] + ": " + tokens[3];
+      std::cout << msg << std::endl;
+      std::cout << std::endl;
+
+  }
   else
   {
       std::string msg;
@@ -544,11 +559,12 @@ int main(int argc, char* argv[])
                // And update the maximum file descriptor
                maxfds = std::max(maxfds, serverSock) ;
                std::string accept = "ACCEPTED,V_GROUP_96";
-            //    accept = 0x01 + accept + 0x04;
+               accept = '\x01' + accept + '\x04';
                
                // create a new client to store information.
                servers[serverSock] = new Server(serverSock, inet_ntoa(server.sin_addr), std::to_string(htons(server.sin_port)));
-               send(serverSock,accept.c_str(),accept.length(),0);
+               int ret = send(serverSock, accept.c_str(), accept.length(),0);
+               std::cout << "Sending accept to server: " << ret << std::endl;
                // Decrement the number of sockets waiting to be dealt with
                n--;
 
