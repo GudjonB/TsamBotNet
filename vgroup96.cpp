@@ -318,17 +318,18 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
   }
   else if((tokens[0].compare("SERVER") == 0) && (tokens.size() == 3))
   {
-      int serverSocket = connectToServer(tokens[2], tokens[1]);
-      FD_SET(serverSocket, openSockets);
-      servers[serverSocket] = new Server(serverSocket, tokens[1], tokens[2]);
-      *maxfds = std::max(*maxfds, serverSocket);
-      std::string sending = "";
-      sending += '\x01';
-      sending += "CONNECT,";
-      sending += GROUP;
-      sending += '\x04';
-      send(serverSocket, sending.c_str(), sending.length(),0);
-      std::cout << "Connected to server on socket: " << serverSocket << std::endl;
+      if(servers.size()<5){
+        int serverSocket = connectToServer(tokens[2], tokens[1]);
+        FD_SET(serverSocket, openSockets);
+        servers[serverSocket] = new Server(serverSocket, tokens[1], tokens[2]);
+        *maxfds = std::max(*maxfds, serverSocket);
+        std::cout << "Connected to server on socket: " << serverSocket << std::endl;
+      }
+      else{
+          std::string msg = "To many servers connected";
+          send(clientSocket, msg.c_str(), msg.length(), 0);
+      }
+
   }
   else if((tokens[0].compare("LISTSERVERS") == 0) && (tokens.size() == 1))
   {
@@ -344,8 +345,10 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
 
   }
   else
-  {
-      std::cout << "Unknown command from client:" << buffer << std::endl;
+  {     
+      std::string msg = "Unknown command from client:";
+      std::cout << msg << buffer << std::endl;
+      send(clientSocket, msg.c_str(), msg.length(), 0);
   }
      
 }
@@ -394,7 +397,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
         servers[serverSocket]->name = tokens[1];
         std::string sending = "";
         sending += '\x01';
-        sending += "ACCEPT,";
+        sending += "ACCEPTED,";
         sending += GROUP;
         sending += '\x04';
         send(serverSocket, sending.c_str(), sending.length(),0);
