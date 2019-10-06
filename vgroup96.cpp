@@ -502,15 +502,6 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
         sender += "SERVER," + thisServer.name + "," + thisServer.ip + "," + thisServer.port + ";";
         for (auto const &server : servers)
         {
-<<<<<<< HEAD
-=======
-            if (server.first == serverSocket)
-            {
-                sender += "SERVER," + server.second->name + "," + server.second->ip + "," + server.second->port + ";";
-            }
-            else
-            {
->>>>>>> d03e6bd65a4339032ff1da92ffabdf65cd3dfa69
             msg += server.second->name + "," + server.second->ip + "," + server.second->port + ";";
         }
         msg = '\x01' + sender + msg + '\x04';
