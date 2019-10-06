@@ -200,11 +200,6 @@ int connectToServer(std::string portno, std::string ipAddress)
 
    serverSocket = socket(svr->ai_family, svr->ai_socktype, svr->ai_protocol);
 
-   std::string sending = "";
-   sending += '\x01';
-   sending += sprintf("CONNECT %s",GROUP);
-   sending += '\x04';
-   send(serverSocket, sending.c_str(), sending.length(),0);
    // Turn on SO_REUSEADDR to allow socket to be quickly reused after 
    // program exit.
 
@@ -220,6 +215,14 @@ int connectToServer(std::string portno, std::string ipAddress)
        perror("Connect failed: ");
        exit(0);
    }
+
+   std::string sending = "";
+   sending += '\x01';
+   sending += "CONNECT ";
+   sending += GROUP;
+   sending += '\x04';
+   send(serverSocket, sending.c_str(), sending.length(),0);
+
    return serverSocket;
    //FD_SET(serverSocket, openSockets);
    //clients[serverSocket] = new Client(serverSocket);
@@ -321,7 +324,8 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
       *maxfds = std::max(*maxfds, serverSocket);
       std::string sending = "";
       sending += '\x01';
-      sending += sprintf("ACCEPTED,%s",GROUP);
+      sending += "CONNECT ";
+      sending += GROUP;
       sending += '\x04';
       send(serverSocket, sending.c_str(), sending.length(),0);
       std::cout << "Connected to server on socket: " << serverSocket << std::endl;
@@ -363,11 +367,35 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
 
      }
   }
-  if((tokens[0].compare("ACCEPTED") == 0) && (tokens.size() == 2))
+  else if((tokens[0].compare("ACCEPTED") == 0) && (tokens.size() == 2))
   {
 
     servers[serverSocket]->name = tokens[1];
     std::cout << "name set " + tokens[1] << std::endl;
+
+
+  }
+  else if((tokens[0].compare("CONNECT") == 0) && (tokens.size() == 2))
+  {
+    if (servers.size() < 5){
+        servers[serverSocket]->name = tokens[1];
+        std::string sending = "";
+        sending += '\x01';
+        sending += "ACCEPT ";
+        sending += GROUP;
+        sending += '\x04';
+        send(serverSocket, sending.c_str(), sending.length(),0);
+        std::cout << "name set " + tokens[1] << std::endl;
+    }
+    else{
+        std::string sending = "";
+        sending += '\x01';
+        sending += "DECLINE ";
+        sending += GROUP;
+        sending += '\x04';
+        send(serverSocket, sending.c_str(), sending.length(),0);
+        closeServer(serverSocket, openSockets, maxfds);
+    }
 
 
   }
