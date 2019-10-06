@@ -595,7 +595,7 @@ int main(int argc, char* argv[])
                           printf("Server closed connection: %d", server->sock);
                           close(server->sock);      
 
-                          closeClient(server->sock, &openSockets, &maxfds);
+                          closeServer(server->sock, &openSockets, &maxfds);
 
                       }
                       // We don't check for -1 (nothing received) because select()
