@@ -248,11 +248,28 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
   }
   else if(tokens[0].compare("LEAVE") == 0)
   {
+      if(tokens.size() == 2) {
+          std::string msg;
+          int serverSock;
+          for(auto const& server : servers)
+          {
+            if(server.second->name == tokens[1])
+            {
+               msg = '\x01' + "SERVER," + server.second->ip + "," + server.second->port + '\x04';
+               serverSock = server.second->sock;
+            }
+          }
+
+          send(serverSock, msg.c_str(), msg.length(), 0);
+      }
       // Close the socket, and leave the socket handling
       // code to deal with tidying up clients etc. when
       // select() detects the OS has torn down the connection.
- 
-      closeClient(clientSocket, openSockets, maxfds);
+      else
+      {
+          closeClient(clientSocket, openSockets, maxfds);
+      }
+    
   }
   else if(tokens[0].compare("WHO") == 0)
   {
@@ -335,23 +352,42 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
   }
   else if((tokens[0].compare("LISTSERVERS") == 0) && (tokens.size() == 1))
   {
-     std::string msg;
+    std::string msg;
 
-     for(auto const& server : servers){
-        msg +="SERVERS " + server.second->name + "," + server.second->ip + "," + server.second->port + ";";
-     }
-     
-     // Reducing the msg length by 1 loses the excess "," - which
-     // granted is totally cheating.
-     send(clientSocket, msg.c_str(), msg.length()-1, 0);
+    for(auto const& server : servers){
+        msg += "SERVERS " + server.second->name + "," + server.second->ip + "," + server.second->port + ";";
+    }
 
-  }
-  else
-  {     
+    // Reducing the msg length by 1 loses the excess "," - which
+    // granted is totally cheating.
+    send(clientSocket, msg.c_str(), msg.length()-1, 0);
+
+   }
+   else if((tokens[0].compare("LISTSERVERS") == 0) && (tokens.size() == 2))
+   {
+        std::string msg;
+        std::string group(GROUP);
+        int serverSocket;
+
+        for(auto const& server : servers){
+            if(tokens[1] == server.second->name) 
+            {
+                serverSocket = server.second->sock;
+            }
+            //msg +="SERVERS " + server.second->name + "," + server.second->ip + "," + server.second->port + ";";
+        }
+        msg = '\x01' + "LISTSERVERS," + group + '\x04';
+        // Reducing the msg length by 1 loses the excess "," - which
+        // granted is totally cheating.
+        send(serverSocket, msg.c_str(), msg.length(), 0);
+
+   }
+   else
+   {     
       std::string msg = "Unknown command from client:";
       std::cout << msg << buffer << std::endl;
       send(clientSocket, msg.c_str(), msg.length(), 0);
-  }
+   }
      
 }
 
@@ -423,7 +459,8 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
 
      for(auto const& server : servers)
      {
-        if(server.first == serverSocket){
+        if(server.first == serverSocket)
+        {
             sender +="SERVER,"+server.second->name + "," + server.second->ip + "," + server.second->port + ";";
         }
         else{
