@@ -296,7 +296,7 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
             {
                 if (server.second->name == tokens[1])
                 {
-                    msg = "SERVER," + server.second->ip + "," + server.second->port;
+                    msg = "SERVERS," + server.second->ip + "," + server.second->port;
                     msg = '\x01' + msg;
                     msg = msg + '\x04';
 
@@ -376,7 +376,7 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
             }
         }
     }
-    else if ((tokens[0].compare("SERVER") == 0) && (tokens.size() == 3))
+    else if ((tokens[0].compare("SERVERS") == 0) && (tokens.size() == 3))
     {
         if (servers.size() < 5)
         {
