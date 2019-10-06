@@ -54,11 +54,12 @@ class Client
 class Server
 {
   public:
-    int sock;              // socket of client connection
-    std::string name;           // Limit length of name of client's user
-    std::string ip;
-    std::string port;
+    int sock;              // socket of server connection
+    std::string name;           // Limit length of name of server's user
+    std::string ip;             // the ip of the server
+    std::string port;           // the port of the server
 
+    Server(){}
     Server(int socket, std::string ipaddr, std::string port) : sock(socket), ip(ipaddr), port(port) {} 
 
     ~Server(){}            // Virtual destructor defined for base class
@@ -73,6 +74,47 @@ class Server
 
 std::map<int, Client*> clients; // Lookup table for per Client information
 std::map<int, Server*> servers; // Lookup table for per Server information
+Server thisServer = Server();              // global variable to referenc this server
+
+
+
+// Gets the computers (that is running the program) ip address on the internet by making
+// a tcp connection to googles dns server and then retrieving the ip address it used.
+in_addr getLocalIpAddr(const char* hostName) {
+    struct sockaddr_in serverAddr;		// Server information									
+    int sock;							// Socket for tcp connection
+ 		
+    // Initialize socket
+    if((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+        perror("Failed to open socket");
+        exit(0);
+    }
+    
+    memset(&serverAddr, 0, sizeof(serverAddr));			// Initialize server information struct			
+    serverAddr.sin_family = AF_INET;					// Set address family		
+    serverAddr.sin_addr.s_addr = inet_addr(hostName);	// Set hostname
+    serverAddr.sin_port = htons(PORT);					// Set the port
+ 
+    // Connect to the server
+    int err = connect(sock, (const struct sockaddr*)&serverAddr, sizeof(serverAddr));
+    if (err < 0)
+    {
+        perror("Failed to connect: ");
+        exit(0);
+    }
+ 
+    struct sockaddr_in ipaddress;											// Variable for the ip adress
+    socklen_t namelen = sizeof(ipaddress);									// Size of the ip address
+    err = getsockname(sock, (struct sockaddr*)&ipaddress, &namelen);		// Get the ip address used to connect from
+    if (err < 0)
+    {
+        perror("Failed to get socket name: ");
+        exit(0);
+    }
+    close(sock);
+  
+    return ipaddress.sin_addr;
+}
 
 // Open socket for specified port.
 //
@@ -117,7 +159,7 @@ int open_socket(int portno)
    memset(&sk_addr, 0, sizeof(sk_addr));
 
    sk_addr.sin_family      = AF_INET;
-   sk_addr.sin_addr.s_addr = INADDR_ANY;
+   sk_addr.sin_addr = getLocalIpAddr("8.8.8.8");
    sk_addr.sin_port        = htons(portno);
 
    // Bind to socket to listen for connections from clients
@@ -218,21 +260,18 @@ int connectToServer(std::string portno, std::string ipAddress)
 
    std::string sending = "";
    sending += '\x01';
-   sending += "CONNECT,";
+   sending += "LISTSERVERS,";
    sending += GROUP;
    sending += '\x04';
    send(serverSocket, sending.c_str(), sending.length(),0);
 
    return serverSocket;
-   //FD_SET(serverSocket, openSockets);
-   //clients[serverSocket] = new Client(serverSocket);
 }
 
 // Process command from client on the server
 
 void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds, 
-                  char *buffer) 
-{
+                  char *buffer){
   std::vector<std::string> tokens;
   std::string token;
 
@@ -284,7 +323,7 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
           send(pair.second->sock, msg.c_str(), msg.length(),0);
       }
   }
-  else if(tokens[0].compare("MSG") == 0)
+  else if((tokens[0].compare("MSG") == 0) && (tokens.size() >= 2))
   {
       for(auto const& pair : clients)
       {
@@ -357,8 +396,7 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
 
 
 void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds, 
-                  char *buffer) 
-{
+                  char *buffer) {
     std::vector<std::string> tokens;
     std::string token;
  
@@ -373,8 +411,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
  
     }
 
-  if((tokens[0].compare("LEAVE") == 0) && (tokens.size() == 3))
-  {
+  if((tokens[0].compare("LEAVE") == 0) && (tokens.size() == 3)){
       // Close the socket, and leave the socket handling
       // code to deal with tidying up clients etc. when
       // select() detects the OS has torn down the connection.
@@ -385,6 +422,15 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
 
      }
   }
+  else if((tokens[0].compare("SERVERS") == 0) && (tokens.size() >= 4)){
+      // Close the socket, and leave the socket handling
+      // code to deal with tidying up clients etc. when
+      // select() detects the OS has torn down the connection.
+      servers[serverSocket]->name = tokens[1];
+    //   while(servers){}
+
+  }
+  /*
   else if((tokens[0].compare("ACCEPTED") == 0) && (tokens.size() == 2))
   {
 
@@ -408,29 +454,25 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
     else{
         std::string sending = "";
         sending += '\x01';
-        sending += "DECLINE,";
+        sending += "DECLINED,";
         sending += GROUP;
         sending += '\x04';
         send(serverSocket, sending.c_str(), sending.length(),0);
         closeServer(serverSocket, openSockets, maxfds);
     }
+*/
 
-
-  }
+  
   else if((tokens[0].compare("LISTSERVERS") == 0) && (tokens.size() == 2))
   {
      std::string msg,sender;
 
+     sender +="SERVER,"+thisServer.name + "," + thisServer.ip + "," + thisServer.port + ";";
      for(auto const& server : servers)
      {
-        if(server.first == serverSocket){
-            sender +="SERVER,"+server.second->name + "," + server.second->ip + "," + server.second->port + ";";
-        }
-        else{
         msg += server.second->name + "," + server.second->ip + "," + server.second->port + ";";
         }
-     }
-     msg = sender + msg;
+     msg = '\x01' + sender + msg + '\x04';
      // Reducing the msg length by 1 loses the excess "," - which
      // granted is totally cheating.
      send(serverSocket, msg.c_str(), msg.length()-1, 0);
@@ -477,6 +519,9 @@ int main(int argc, char* argv[])
         printf("Usage: chat_server <ip port>\n");
         exit(0);
     }
+    thisServer.name = GROUP;
+    thisServer.port = argv[1];
+    thisServer.ip = inet_ntoa(getLocalIpAddr("8.8.8.8"));
 
     // Setup socket for server to listen to
 
@@ -557,6 +602,8 @@ int main(int argc, char* argv[])
                // create a new client to store information.
                servers[serverSock] = new Server(serverSock, inet_ntoa(server.sin_addr), std::to_string(htons(server.sin_port)));
                // Decrement the number of sockets waiting to be dealt with
+               std::string msg = "\1LISTSERVERS,V_Group_96\4";
+               send(serverSock, msg.c_str(),msg.length(),0);
                n--;
 
                printf("server connected on server: %d\n", serverSock);
