@@ -35,13 +35,8 @@
 #endif
 
 #define BACKLOG  5          // Allowed length of queue of waiting connections
-<<<<<<< HEAD
-#define PORT 5959
-#define GROUP "V_Group_1"
-=======
 #define PORT 9696
 #define GROUP "V_Group_96"
->>>>>>> c3a7c0ef1135e8f9edfb5b0c723b00bf7a864b64
 
 // Simple class for handling connections from clients.
 //
@@ -558,13 +553,9 @@ int main(int argc, char* argv[])
 
                // And update the maximum file descriptor
                maxfds = std::max(maxfds, serverSock) ;
-               std::string accept = "ACCEPTED,V_GROUP_96";
-               accept = '\x01' + accept + '\x04';
                
                // create a new client to store information.
                servers[serverSock] = new Server(serverSock, inet_ntoa(server.sin_addr), std::to_string(htons(server.sin_port)));
-               int ret = send(serverSock, accept.c_str(), accept.length(),0);
-               std::cout << "Sending accept to server: " << ret << std::endl;
                // Decrement the number of sockets waiting to be dealt with
                n--;
 
