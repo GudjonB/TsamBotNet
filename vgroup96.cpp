@@ -294,9 +294,10 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
             int serverSock;
             for (auto const &server : servers)
             {
-                if (server.second->name == tokens[1])
+                if (server.second->name == tokens[1] && server.second->port == tokens[1])
                 {
-                    msg = "SERVERS," + server.second->ip + "," + server.second->port;
+                    // closeServer(server, openSockets, maxfds);
+                    msg = "LEAVE," + server.second->ip + "," + server.second->port;
                     msg = '\x01' + msg;
                     msg = msg + '\x04';
 
@@ -504,9 +505,24 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
     {
         std::string msg, sender;
 
+<<<<<<< HEAD
         sender += "SERVERS," + thisServer.name + "," + thisServer.ip + "," + thisServer.port + ";";
         for (auto const &server : servers)
         {
+=======
+        sender += "SERVER," + thisServer.name + "," + thisServer.ip + "," + thisServer.port + ";";
+        for (auto const &server : servers)
+        {
+<<<<<<< HEAD
+=======
+            if (server.first == serverSocket)
+            {
+                sender += "SERVER," + server.second->name + "," + server.second->ip + "," + server.second->port + ";";
+            }
+            else
+            {
+>>>>>>> d03e6bd65a4339032ff1da92ffabdf65cd3dfa69
+>>>>>>> f9dfb83bbbccc7841ce9776d56619ea9064a1f77
             msg += server.second->name + "," + server.second->ip + "," + server.second->port + ";";
         }
         msg = '\x01' + sender + msg + '\x04';
