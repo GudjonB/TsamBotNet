@@ -499,7 +499,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
     {
         std::string msg, sender;
 
-        sender += "SERVER," + thisServer.name + "," + thisServer.ip + "," + thisServer.port + ";";
+        sender += "SERVERS," + thisServer.name + "," + thisServer.ip + "," + thisServer.port + ";";
         for (auto const &server : servers)
         {
             msg += server.second->name + "," + server.second->ip + "," + server.second->port + ";";
