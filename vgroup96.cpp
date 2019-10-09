@@ -36,7 +36,7 @@
 
 #define BACKLOG 5 // Allowed length of queue of waiting connections
 #define PORT 5050
-#define GROUP "V_Group_Gudjon"
+#define GROUP "V_Group_6"
 
 // Simple class for handling connections from clients.
 //
@@ -54,15 +54,36 @@ public:
 class Server
 {
 public:
-    int sock;         // socket of server connection
-    std::string name; // Limit length of name of server's user
-    std::string ip;   // the ip of the server
-    std::string port; // the port of the server
+    int sock;                 // socket of server connection
+    std::string name;         // Limit length of name of server's user
+    std::string ip;           // the ip of the server
+    std::string port;         // the port of the server
+    std::string msgVector[5]; // vector for messages for this server
+    int msgs;
+    int newestMsg;
 
-    Server() {}
-    Server(int socket, std::string ipaddr, std::string port) : sock(socket), ip(ipaddr), port(port) {}
-
+    Server() : msgs(0), newestMsg(0) {}
+    Server(int socket, std::string ipaddr, std::string port) : sock(socket), ip(ipaddr), port(port), msgs(0), newestMsg(0) {}
     ~Server() {} // Virtual destructor defined for base class
+    void addMsg(std::string msg)
+    {
+        if (msgs >= 5)
+        {
+            newestMsg = (newestMsg + 1) % 6;
+            msgVector[newestMsg] = msg;
+        }
+    }
+    std::string getMsg()
+    {
+        if (msgs > 0)
+        {
+            std::string msg = msgVector[newestMsg]; //TODO kannski adda msg = NULL
+            msgs--;
+            (newestMsg == 1) ? newestMsg = msgs : newestMsg--;
+            return msg;
+        }
+        return NULL;
+    }
 };
 
 // Note: map is not necessarily the most efficient method to use here,
@@ -316,6 +337,8 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
         // select() detects the OS has torn down the connection.
         else
         {
+            std::string msg = "Good bye";
+            send(clientSocket, msg.c_str(), msg.length(), 0);
             closeClient(clientSocket, openSockets, maxfds);
         }
     }
@@ -364,12 +387,11 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
     }
     else if ((tokens[0].compare("SENDMSG") == 0) && (tokens.size() >= 2))
     {
-        for (auto const &pair : servers)
+        for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
         {
             if (pair.second->name.compare(tokens[1]) == 0)
             {
-                std::string msg;
-                std::string group(GROUP);
+                std::string msg, group(GROUP);
                 msg += '\x01';
                 msg += "SEND_MSG," + group + "," + tokens[1] + ",";
                 for (auto i = tokens.begin() + 2; i != tokens.end(); i++)
@@ -377,7 +399,20 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
                     msg += *i + " ";
                 }
                 msg += '\x04';
-                send(pair.second->sock, msg.c_str(), msg.length(), 0);
+                pair.second->addMsg(msg);
+                break;
+            }
+        }
+    }
+    else if ((tokens[0].compare("GETMSG") == 0) && (tokens.size() == 2))
+    {
+        for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
+        {
+            if (pair.second->name.compare(tokens[1]) == 0)
+            {
+                std::string msg = pair.second->getMsg();
+                send(clientSocket, msg.c_str(), msg.length(), 0);
+                break;
             }
         }
     }
@@ -482,7 +517,8 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
         std::cout << buffer << std::endl;
         //   while(servers){}
     }
-    /*
+    
+/*
   else if((tokens[0].compare("ACCEPTED") == 0) && (tokens.size() == 2))
   {
 
@@ -529,12 +565,37 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
         std::cout << "Sending LISTSERVERS: " << msg << std::endl;
         send(serverSocket, msg.c_str(), msg.length(), 0);
     }
-    else if ((tokens[0].compare("SEND_MSG") == 0) && (tokens.size() == 4))
+    else if ((tokens[0].compare("SEND_MSG") == 0) && (tokens.size() >= 3))
     {
-        std::string msg = "";
-        msg += tokens[1] + ": " + tokens[3];
-        std::cout << msg << std::endl;
-        std::cout << std::endl;
+        if(tokens[2] == thisServer.name ){
+            thisServer.addMsg(std::string(buffer));
+        }
+        else {
+            for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
+            {
+                if (pair.second->name.compare(tokens[2]) == 0)
+                {
+                    pair.second->addMsg(std::string(buffer));
+                    break;
+                }
+            }
+        }
+    }
+    else if ((tokens[0].compare("GET_MSG") == 0) && (tokens.size() >= 3))
+    {
+        if(tokens[2] == thisServer.name ){
+            thisServer.addMsg(std::string(buffer));
+        }
+        else {
+            for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
+            {
+                if (pair.second->name.compare(tokens[2]) == 0)
+                {
+                    pair.second->addMsg(std::string(buffer));
+                    break;
+                }
+            }
+        }
     }
     else
     {
