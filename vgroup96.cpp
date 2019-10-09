@@ -315,18 +315,22 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
             int serverSock;
             for (auto const &server : servers)
             {
-                if (server.second->name == tokens[1] && server.second->port == tokens[1])
+                if (server.second->name == tokens[1]) //&& server.second->port == tokens[1])
                 {
                     // closeServer(server, openSockets, maxfds);
-                    msg = "LEAVE," + server.second->ip + "," + server.second->port;
+                    /*msg = "LEAVE," + server.second->ip + "," + server.second->port;
                     msg = '\x01' + msg;
-                    msg = msg + '\x04';
+                    msg = msg + '\x04';*/
 
                     serverSock = server.second->sock;
                 }
             }
-
+            msg = "LEAVE," + thisServer.ip + "," + thisServer.port;
+            msg = '\x01' + msg;
+            msg = msg + '\x04';        
             send(serverSock, msg.c_str(), msg.length(), 0);
+            std::cout << "Sent LEAVE to server " << tokens[1] << std::endl;
+            closeServer(serverSock, openSockets, maxfds);
         }
         // Close the socket, and leave the socket handling
         // code to deal with tidying up clients etc. when
@@ -490,16 +494,26 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
         // Close the socket, and leave the socket handling
         // code to deal with tidying up clients etc. when
         // select() detects the OS has torn down the connection.
+        std::string command(buffer);
+        std::cout << "LEAVE msg: " << command << std::endl;
         for (auto const &server : servers)
         {
-            if (server.second->ip == tokens[1] && server.second->port == tokens[2])
+            if ((server.second->ip == tokens[1]) && (server.second->port == tokens[2]))
+            {
                 closeServer(server.first, openSockets, maxfds);
+                std::cout << "Closed connection to server" << std::endl;
+            }
         }
     }
     else if ((tokens[0].compare("SERVERS") == 0) && (tokens.size() >= 4))
     {
-
+        // Close the socket, and leave the socket handling
+        // code to deal with tidying up clients etc. when
+        // select() detects the OS has torn down the connection.
+        std::cout << "Received SERVERS from: " << tokens[1] << std::endl;
         servers[serverSocket]->name = tokens[1];
+        servers[serverSocket]->ip = tokens[2];
+        servers[serverSocket]->port = tokens[3];
         std::cout << buffer << std::endl;
         //   while(servers){}
     }
@@ -548,7 +562,8 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
         msg = '\x01' + sender + msg + '\x04';
         // Reducing the msg length by 1 loses the excess "," - which
         // granted is totally cheating.
-        send(serverSocket, msg.c_str(), msg.length() - 1, 0);
+        std::cout << "Sending LISTSERVERS: " << msg << std::endl;
+        send(serverSocket, msg.c_str(), msg.length(), 0);
     }
     else if ((tokens[0].compare("SEND_MSG") == 0) && (tokens.size() >= 3))
     {
@@ -696,6 +711,7 @@ int main(int argc, char *argv[])
                 servers[serverSock] = new Server(serverSock, inet_ntoa(server.sin_addr), std::to_string(htons(server.sin_port)));
                 // Decrement the number of sockets waiting to be dealt with
                 std::string msg = "\1LISTSERVERS,V_Group_96\4";
+                //serverCommand(serverSock, &openSockets, &maxfds, (char *) msg.c_str());
                 send(serverSock, msg.c_str(), msg.length(), 0);
                 n--;
 
@@ -747,9 +763,10 @@ int main(int argc, char *argv[])
                         // only triggers if there is something on the socket for us.
                         else
                         {
-
+                            std::cout << "Bytes received: " << bytesRecv << std::endl;
                             if ((buffer[0] == '\x01') && (buffer[bytesRecv - 1] == '\x04'))
                             {
+                                
                                 std::cout << "Right format" << std::endl;
                                 char bufferToParse[1024];
                                 bzero(bufferToParse, sizeof(bufferToParse));
