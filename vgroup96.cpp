@@ -36,7 +36,7 @@
 
 #define BACKLOG 5 // Allowed length of queue of waiting connections
 #define PORT 5050
-#define GROUP "V_Group_Gudjon"
+#define GROUP "V_Group_6"
 
 // Simple class for handling connections from clients.
 //
@@ -78,8 +78,8 @@ public:
         if (msgs > 0)
         {
             std::string msg = msgVector[newestMsg]; //TODO kannski adda msg = NULL
-            (newestMsg == 1) ? newestMsg = 5 : newestMsg--;
             msgs--;
+            (newestMsg == 1) ? newestMsg = msgs : newestMsg--;
             return msg;
         }
         return NULL;
@@ -498,10 +498,9 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
     }
     else if ((tokens[0].compare("SERVERS") == 0) && (tokens.size() >= 4))
     {
-        // Close the socket, and leave the socket handling
-        // code to deal with tidying up clients etc. when
-        // select() detects the OS has torn down the connection.
+
         servers[serverSocket]->name = tokens[1];
+        std::cout << buffer << std::endl;
         //   while(servers){}
     }
     
