@@ -760,13 +760,25 @@ int main(int argc, char *argv[])
                             std::cout << buffer << std::endl;
                             if ((buffer[0] == '\x01') && (buffer[bytesRecv - 1] == '\x04'))
                             {
-                                
                                 std::cout << "Right format" << std::endl;
-                                char bufferToParse[1024];
-                                bzero(bufferToParse, sizeof(bufferToParse));
-                                memcpy(bufferToParse, buffer + 1, bytesRecv - 2);
-                                serverCommand(server->sock, &openSockets, &maxfds,
+                                std::vector<std::string> tokens;
+                                std::string token;
+
+                                // Split command from client into tokens for parsing
+                                std::stringstream stream(buffer);
+                                while (stream.good())
+                                {
+                                    //std::string substr;
+                                    getline(stream, token, '\x04');
+                                    tokens.push_back(token);
+                                }
+                                for(u_int i = 0; i != tokens.size(); i++){
+                                    char bufferToParse[5000];
+                                    bzero(bufferToParse, sizeof(bufferToParse));
+                                    memcpy(bufferToParse, tokens[i].c_str() + 1 , sizeof(tokens[i])-2);
+                                    serverCommand(server->sock, &openSockets, &maxfds,
                                               bufferToParse);
+                                }
                             }
                         }
                     }
