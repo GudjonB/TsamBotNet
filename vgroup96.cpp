@@ -36,7 +36,7 @@
 
 #define BACKLOG 5 // Allowed length of queue of waiting connections
 #define PORT 4002
-#define GROUP "V_Group_96"
+#define GROUP "V_Group_97"
 
 // Simple class for handling connections from clients.
 //
@@ -283,7 +283,7 @@ int connectToServer(std::string portno, std::string ipAddress)
     std::string sending = "";
     sending += '\x01';
     sending += "LISTSERVERS,";
-    sending += "V_Group_96";
+    sending += "V_Group_97";
     sending += '\x04';
     send(serverSocket, sending.c_str(), sending.length(), 0);
 
@@ -471,13 +471,10 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
             {
                 serverSocket = server.second->sock;
             }
-            //msg +="SERVERS " + server.second->name + "," + server.second->ip + "," + server.second->port + ";";
         }
         msg = "LISTSERVERS," + group;
         msg = '\x01' + msg;
         msg = msg + '\x04';
-        // Reducing the msg length by 1 loses the excess "," - which
-        // granted is totally cheating.
         send(serverSocket, msg.c_str(), msg.length(), 0);
     }
     else
@@ -768,15 +765,12 @@ int main(int argc, char *argv[])
                                 std::stringstream stream(buffer);
                                 while (stream.good())
                                 {
-                                    //std::string substr;
                                     getline(stream, token, '\x04');
-                                    tokens.push_back(token);
+                                    if(strlen(token.c_str()) > 0){
+                                        tokens.push_back(token);
+                                    }
                                 }
                                 for(u_int i = 0; i < tokens.size(); i++){
-                                    if(tokens[i] == "\n"){
-                                        break;
-                                    }
-                                    std::cout << tokens[i] << std::endl;
                                     char bufferToParse[5000];
                                     bzero(bufferToParse, sizeof(bufferToParse));
                                     memcpy(bufferToParse, tokens[i].c_str() + 1 , tokens[i].length());
