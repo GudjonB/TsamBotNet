@@ -599,7 +599,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
             {
                 if (pair.second->name.compare(tokens[2]) == 0)
                 {
-                    pair.second->addMsg(std::string(buffer));
+                    send(pair.first, buffer, strlen(buffer), 0);
                     break;
                 }
             }
