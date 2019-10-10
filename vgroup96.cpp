@@ -485,14 +485,22 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
 {
     std::vector<std::string> tokens;
     std::string token;
-
+    unsigned int pos;
     // Split command from client into tokens for parsing
     std::stringstream stream(buffer);
     while (stream.good())
     {
         //std::string substr;
+        
         getline(stream, token, ',');
-        tokens.push_back(token);
+        if((pos = token.find_first_of(";")) != std::string::npos)
+        {
+            tokens.push_back(token.substr(0, pos));
+        }
+        else
+        {
+            tokens.push_back(token);
+        } 
     }
 
     if ((tokens[0].compare("LEAVE") == 0) && (tokens.size() == 3))
@@ -504,7 +512,8 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
         std::cout << "LEAVE msg: " << command << std::endl;
         for (auto const &server : servers)
         {
-            if ((server.second->ip == tokens[1]) && (server.second->port == tokens[2]))
+            std::cout << tokens[1] << "," << tokens[2] << " : " << server.second->ip <<  "," << server.second->port << std::endl;
+            if ((tokens[1].compare(server.second->ip) == 0) && (tokens[2]).compare(server.second->port) == 0)
             {
                 closeServer(server.first, openSockets, maxfds);
                 std::cout << "Closed connection to server" << std::endl;
