@@ -88,7 +88,7 @@ public:
             msgs--;
             return msg;
         }
-        return NULL;
+        return "NO MESSAGES";
     }
 };
 
