@@ -36,7 +36,7 @@
 
 #define BACKLOG 5 // Allowed length of queue of waiting connections
 #define PORT 4002
-#define GROUP "V_Group_97"
+#define GROUP "V_Group_96"
 
 // Simple class for handling connections from clients.
 //
@@ -102,6 +102,8 @@ public:
 std::map<int, Client *> clients; // Lookup table for per Client information
 std::map<int, Server *> servers; // Lookup table for per Server information
 Server thisServer = Server();    // global variable to referenc this server
+int listenSock;                  // Socket for connections to server
+int listenLocalSock;             // Socket for connections to server
 
 // Gets the computers (that is running the program) ip address on the internet by making
 // a tcp connection to googles dns server and then retrieving the ip address it used.
@@ -216,9 +218,22 @@ void closeClient(int clientSocket, fd_set *openSockets, int *maxfds)
 
     if (*maxfds == clientSocket)
     {
-        for (auto const &p : clients)
+        if (!clients.empty())
         {
-            *maxfds = std::max(*maxfds, p.second->sock);
+            for (auto const &p : clients)
+            {
+                *maxfds = std::max(*maxfds, p.second->sock);
+            }
+        }
+        else if (!servers.empty())
+        {
+            for (auto const &p : servers)
+            {
+                *maxfds = std::max(*maxfds, p.second->sock);
+            }
+        }
+        else{
+            *maxfds = std::max(listenSock, listenLocalSock);
         }
     }
 
@@ -238,9 +253,20 @@ void closeServer(int serverSocket, fd_set *openSockets, int *maxfds)
 
     if (*maxfds == serverSocket)
     {
-        for (auto const &p : servers)
-        {
-            *maxfds = std::max(*maxfds, p.second->sock);
+        if(!servers.empty()){
+            for (auto const &p : servers)
+            {
+                *maxfds = std::max(*maxfds, p.second->sock);
+            }
+        }
+        else if(!clients.empty()){
+            for (auto const &p : clients)
+            {
+                *maxfds = std::max(*maxfds, p.second->sock);
+            }
+        }
+        else{
+            *maxfds = std::max(listenSock, listenLocalSock);
         }
     }
 
@@ -288,7 +314,7 @@ int connectToServer(std::string portno, std::string ipAddress)
     std::string sending = "";
     sending += '\x01';
     sending += "LISTSERVERS,";
-    sending += "V_Group_97";
+    sending += GROUP;
     sending += '\x04';
     send(serverSocket, sending.c_str(), sending.length(), 0);
 
@@ -321,7 +347,7 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
             int serverSock;
             for (auto const &server : servers)
             {
-                if (server.second->name == tokens[1]) //&& server.second->port == tokens[1])
+                if (server.second->name == tokens[1])
                 {
                     serverSock = server.second->sock;
                     msg = "LEAVE," + thisServer.ip + "," + thisServer.port;
@@ -460,7 +486,7 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
 
         // Reducing the msg length by 1 loses the excess "," - which
         // granted is totally cheating.
-        send(clientSocket, msg.c_str(), msg.length() - 1, 0);
+        send(clientSocket, msg.c_str(), msg.length(), 0);
     }
     else if ((tokens[0].compare("LISTSERVERS") == 0) && (tokens.size() == 2))
     {
@@ -594,6 +620,16 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
             }
         }
     }
+    else if ((tokens[0].compare("KEEPALIVE") == 0) && (tokens.size() == 2))
+    {
+        if(tokens[1] != "0"){
+            std::string msg, group(GROUP);
+            msg += '\x01';
+            msg += "GET_MSG," + group;
+            msg += '\x04';
+            send(serverSocket, msg.c_str(), msg.length(), 0);
+        }
+    }
     else
     {
         std::string msg;
@@ -608,8 +644,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
 int main(int argc, char *argv[])
 {
     bool finished;
-    int listenSock;       // Socket for connections to server
-    int listenLocalSock;  // Socket for connections to server
+    
     int clientSock;       // Socket of connecting client
     int serverSock;       // Socket of connecting servers
     fd_set openSockets;   // Current open sockets
@@ -656,6 +691,11 @@ int main(int argc, char *argv[])
         maxfds = std::max(listenSock, listenLocalSock);
     }
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> ae383c2d7a59d23a41238c5eb9a1102b65cbb9ab
     finished = false;
     timeval* time = new timeval();
     time->tv_sec = 60;
@@ -668,8 +708,12 @@ int main(int argc, char *argv[])
         memset(buffer, 0, sizeof(buffer));
 
         // Look at sockets and see which ones have something to be read()
+<<<<<<< HEAD
         int n = select(maxfds + 1, &readSockets, NULL, &exceptSockets, time);
 
+=======
+        int n = select(maxfds + 1, &readSockets, NULL, &exceptSockets, NULL);
+>>>>>>> ae383c2d7a59d23a41238c5eb9a1102b65cbb9ab
         if (n < 0)
         {
             perror("select failed - closing down\n");
