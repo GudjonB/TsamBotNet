@@ -36,7 +36,7 @@
 
 #define BACKLOG 5 // Allowed length of queue of waiting connections
 #define PORT 5050
-#define GROUP "V_Group_6"
+#define GROUP "V_Group_Solvi"
 
 // Simple class for handling connections from clients.
 //
@@ -479,14 +479,22 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
 {
     std::vector<std::string> tokens;
     std::string token;
-
+    unsigned int pos;
     // Split command from client into tokens for parsing
     std::stringstream stream(buffer);
     while (stream.good())
     {
         //std::string substr;
+        
         getline(stream, token, ',');
-        tokens.push_back(token);
+        if((pos = token.find_first_of(";")) != std::string::npos)
+        {
+            tokens.push_back(token.substr(0, pos));
+        }
+        else
+        {
+            tokens.push_back(token);
+        } 
     }
 
     if ((tokens[0].compare("LEAVE") == 0) && (tokens.size() == 3))
@@ -498,7 +506,8 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
         std::cout << "LEAVE msg: " << command << std::endl;
         for (auto const &server : servers)
         {
-            if ((server.second->ip == tokens[1]) && (server.second->port == tokens[2]))
+            std::cout << tokens[1] << "," << tokens[2] << " : " << server.second->ip <<  "," << server.second->port << std::endl;
+            if ((tokens[1].compare(server.second->ip) == 0) && (tokens[2]).compare(server.second->port) == 0)
             {
                 closeServer(server.first, openSockets, maxfds);
                 std::cout << "Closed connection to server" << std::endl;
@@ -710,7 +719,7 @@ int main(int argc, char *argv[])
                 // create a new client to store information.
                 servers[serverSock] = new Server(serverSock, inet_ntoa(server.sin_addr), std::to_string(htons(server.sin_port)));
                 // Decrement the number of sockets waiting to be dealt with
-                std::string msg = "\1LISTSERVERS,V_Group_96\4";
+                std::string msg = "\1LISTSERVERS,V_Group_Solvi\4";
                 //serverCommand(serverSock, &openSockets, &maxfds, (char *) msg.c_str());
                 send(serverSock, msg.c_str(), msg.length(), 0);
                 n--;
