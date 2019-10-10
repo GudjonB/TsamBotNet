@@ -20,8 +20,6 @@
 #include <algorithm>
 #include <map>
 #include <vector>
-#include <ctime>
-#include <cstdio>
 
 #include <iostream>
 #include <sstream>
@@ -658,10 +656,6 @@ int main(int argc, char *argv[])
         maxfds = std::max(listenSock, listenLocalSock);
     }
 
-    std::clock_t timer;
-    timer = std::clock();
-    double time;
-
     finished = false;
     timeval* time = new timeval();
     time->tv_sec = 60;
@@ -680,6 +674,17 @@ int main(int argc, char *argv[])
         {
             perror("select failed - closing down\n");
             finished = true;
+        }
+        else if(n == 0){
+            for (auto const &server : servers)
+                    {
+                        std::cout << "Sending keepalive to server: " << server.second->name << std::endl;
+                        std::string msg = "KEEPALIVE,";
+                        msg += std::to_string(server.second->msgs);
+                        msg += '\x01' + msg;
+                        msg += msg + '\x04';
+                        send(server.first, msg.c_str(), msg.length(), 0);
+                    }
         }
         else
         {
@@ -804,21 +809,6 @@ int main(int argc, char *argv[])
                                 }
                             }
                         }
-                    }
-                }
-                time = (std::clock() - timer) / (double)CLOCKS_PER_SEC;
-                if (time > 60)
-                {
-
-                    timer = std::clock();
-                    for (auto const &server : servers)
-                    {
-                        std::cout << "Sending keepalive to server: " << server.second->name << std::endl;
-                        std::string msg = "KEEPALIVE,";
-                        msg += std::to_string(server.second->msgs);
-                        msg += '\x01' + msg;
-                        msg += msg + '\x04';
-                        send(server.first, msg.c_str(), msg.length(), 0);
                     }
                 }
             }
