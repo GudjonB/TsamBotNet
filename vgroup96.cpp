@@ -318,20 +318,15 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
             {
                 if (server.second->name == tokens[1]) //&& server.second->port == tokens[1])
                 {
-                    // closeServer(server, openSockets, maxfds);
-                    /*msg = "LEAVE," + server.second->ip + "," + server.second->port;
-                    msg = '\x01' + msg;
-                    msg = msg + '\x04';*/
-
                     serverSock = server.second->sock;
+                    msg = "LEAVE," + thisServer.ip + "," + thisServer.port;
+                    msg = '\x01' + msg;
+                    msg = msg + '\x04';        
+                    send(serverSock, msg.c_str(), msg.length(), 0);
+                    std::cout << "Sent LEAVE to server " << tokens[1] << std::endl;
+                    closeServer(serverSock, openSockets, maxfds);
                 }
             }
-            msg = "LEAVE," + thisServer.ip + "," + thisServer.port;
-            msg = '\x01' + msg;
-            msg = msg + '\x04';        
-            send(serverSock, msg.c_str(), msg.length(), 0);
-            std::cout << "Sent LEAVE to server " << tokens[1] << std::endl;
-            closeServer(serverSock, openSockets, maxfds);
         }
         // Close the socket, and leave the socket handling
         // code to deal with tidying up clients etc. when
@@ -400,7 +395,7 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
                     msg += *i + " ";
                 }
                 msg += '\x04';
-                pair.second->addMsg(msg);
+                send(pair.first, msg.c_str(), msg.length(), 0);
                 break;
             }
         }
