@@ -716,10 +716,11 @@ int main(int argc, char *argv[])
                         std::cout << "Sending keepalive to server: " << server.second->name << std::endl;
                         std::string msg = "KEEPALIVE,";
                         msg += std::to_string(server.second->msgs);
-                        msg += '\x01' + msg;
-                        msg += msg + '\x04';
+                        msg = '\x01' + msg;
+                        msg = msg + '\x04';
                         send(server.first, msg.c_str(), msg.length(), 0);
                     }
+                    time->tv_sec = 60;
         }
         else
         {
