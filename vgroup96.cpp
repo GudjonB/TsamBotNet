@@ -691,11 +691,6 @@ int main(int argc, char *argv[])
         maxfds = std::max(listenSock, listenLocalSock);
     }
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> ae383c2d7a59d23a41238c5eb9a1102b65cbb9ab
     finished = false;
     timeval* time = new timeval();
     time->tv_sec = 60;
@@ -708,12 +703,8 @@ int main(int argc, char *argv[])
         memset(buffer, 0, sizeof(buffer));
 
         // Look at sockets and see which ones have something to be read()
-<<<<<<< HEAD
         int n = select(maxfds + 1, &readSockets, NULL, &exceptSockets, time);
 
-=======
-        int n = select(maxfds + 1, &readSockets, NULL, &exceptSockets, NULL);
->>>>>>> ae383c2d7a59d23a41238c5eb9a1102b65cbb9ab
         if (n < 0)
         {
             perror("select failed - closing down\n");
