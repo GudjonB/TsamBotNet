@@ -590,7 +590,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
         std::string command = std::string(buffer);
         msg += " " + command;
         std::cout << msg << std::endl;
-        send(serverSocket, msg.c_str(), msg.length(), 0);
+        // send(serverSocket, msg.c_str(), msg.length(), 0);
     }
 }
 
@@ -772,10 +772,14 @@ int main(int argc, char *argv[])
                                     getline(stream, token, '\x04');
                                     tokens.push_back(token);
                                 }
-                                for(u_int i = 0; i != tokens.size(); i++){
+                                for(u_int i = 0; i < tokens.size(); i++){
+                                    if(tokens[i] == "\n"){
+                                        break;
+                                    }
+                                    std::cout << tokens[i] << std::endl;
                                     char bufferToParse[5000];
                                     bzero(bufferToParse, sizeof(bufferToParse));
-                                    memcpy(bufferToParse, tokens[i].c_str() + 1 , sizeof(tokens[i])-2);
+                                    memcpy(bufferToParse, tokens[i].c_str() + 1 , tokens[i].length());
                                     serverCommand(server->sock, &openSockets, &maxfds,
                                               bufferToParse);
                                 }
