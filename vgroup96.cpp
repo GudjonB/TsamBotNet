@@ -596,6 +596,11 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
             }
         }
     }
+    else if ((tokens[0].compare("KEEPALIVE") == 0) && (tokens.size() == 2))
+    {
+        
+
+    }
     else
     {
         std::string msg;
