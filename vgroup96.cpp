@@ -485,7 +485,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
 {
     std::vector<std::string> tokens;
     std::string token;
-    unsigned int pos;
+    size_t pos;
     // Split command from client into tokens for parsing
     std::stringstream stream(buffer);
     while (stream.good())
@@ -647,6 +647,8 @@ int main(int argc, char *argv[])
     }
 
     finished = false;
+    timeval* time = new timeval();
+    time->tv_sec = 60;
 
     while (!finished)
     {
@@ -655,7 +657,7 @@ int main(int argc, char *argv[])
         memset(buffer, 0, sizeof(buffer));
 
         // Look at sockets and see which ones have something to be read()
-        int n = select(maxfds + 1, &readSockets, NULL, &exceptSockets, NULL);
+        int n = select(maxfds + 1, &readSockets, NULL, &exceptSockets, time);
 
         if (n < 0)
         {
