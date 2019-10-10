@@ -1,9 +1,9 @@
 all: clean botnet
 botnet:
 	g++ -Wall -pthread -std=c++11 client.cpp -o client
-	g++ -Wall -pthread -std=c++11 vgroup96.cpp -o vgroup96
+	g++ -Wall -pthread -std=c++11 vgroup96.cpp -o tsamvgroup96
 clean:
 	rm -f client
-	rm -f vgroup96
+	rm -f tsamvgroup96
 run:
-	sudo ./vgroup96 6969
+	./tsamvgroup96 4099

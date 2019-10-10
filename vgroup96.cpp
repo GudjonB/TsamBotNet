@@ -35,8 +35,8 @@
 #endif
 
 #define BACKLOG 5 // Allowed length of queue of waiting connections
-#define PORT 5050
-#define GROUP "V_Group_Solvi"
+#define PORT 4002
+#define GROUP "V_Group_97"
 
 // Simple class for handling connections from clients.
 //
@@ -65,21 +65,22 @@ public:
     Server() : msgs(0), newestMsg(0) {}
     Server(int socket, std::string ipaddr, std::string port) : sock(socket), ip(ipaddr), port(port), msgs(0), newestMsg(0) {}
     ~Server() {} // Virtual destructor defined for base class
-    void addMsg(std::string msg)
-    {
-        if (msgs >= 5)
-        {
+    void addMsg(std::string msg){
+        if (msgs >= 5){
+            newestMsg = (newestMsg + 1) % 6;
+            msgVector[newestMsg] = msg;
+        }
+        else{
+            msgs++;
             newestMsg = (newestMsg + 1) % 6;
             msgVector[newestMsg] = msg;
         }
     }
-    std::string getMsg()
-    {
-        if (msgs > 0)
-        {
+    std::string getMsg(){
+        if (msgs > 0){
             std::string msg = msgVector[newestMsg]; //TODO kannski adda msg = NULL
+            (newestMsg == 1 && msgs > 1) ? newestMsg = 5 : newestMsg--;
             msgs--;
-            (newestMsg == 1) ? newestMsg = msgs : newestMsg--;
             return msg;
         }
         return NULL;
@@ -258,7 +259,7 @@ int connectToServer(std::string portno, std::string ipAddress)
     if (getaddrinfo(ipAddress.c_str(), portno.c_str(), &hints, &svr) != 0)
     {
         perror("getaddrinfo failed: ");
-        exit(0);
+        return -1;
     }
 
     serverSocket = socket(svr->ai_family, svr->ai_socktype, svr->ai_protocol);
@@ -276,13 +277,13 @@ int connectToServer(std::string portno, std::string ipAddress)
     {
         printf("Failed to open socket to server: %s\n", ipAddress.c_str());
         perror("Connect failed: ");
-        exit(0);
+        return -1;
     }
 
     std::string sending = "";
     sending += '\x01';
     sending += "LISTSERVERS,";
-    sending += GROUP;
+    sending += "V_Group_97";
     sending += '\x04';
     send(serverSocket, sending.c_str(), sending.length(), 0);
 
@@ -406,25 +407,38 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
     }
     else if ((tokens[0].compare("GETMSG") == 0) && (tokens.size() == 2))
     {
-        for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
-        {
-            if (pair.second->name.compare(tokens[1]) == 0)
+        if( tokens[1] == thisServer.name ){
+            std::string msg = thisServer.getMsg();
+            send(clientSocket, msg.c_str(), msg.length(), 0);
+        }
+        else{
+            for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
             {
-                std::string msg = pair.second->getMsg();
-                send(clientSocket, msg.c_str(), msg.length(), 0);
-                break;
+                if (pair.second->name.compare(tokens[1]) == 0)
+                {
+                    std::string msg = pair.second->getMsg();
+                    send(clientSocket, msg.c_str(), msg.length(), 0);
+                    break;
+                }
             }
         }
     }
-    else if ((tokens[0].compare("SERVERS") == 0) && (tokens.size() == 3))
+    else if ((tokens[0].compare("SERVER") == 0) && (tokens.size() == 3))
     {
         if (servers.size() < 5)
         {
             int serverSocket = connectToServer(tokens[2], tokens[1]);
-            FD_SET(serverSocket, openSockets);
-            servers[serverSocket] = new Server(serverSocket, tokens[1], tokens[2]);
-            *maxfds = std::max(*maxfds, serverSocket);
-            std::cout << "Connected to server on socket: " << serverSocket << std::endl;
+            if(serverSocket == -1){
+                std::string msg = "Failed to connect to server...";
+                send(clientSocket, msg.c_str(), msg.length(), 0);
+            }
+            else{
+                FD_SET(serverSocket, openSockets);
+                servers[serverSocket] = new Server(serverSocket, tokens[1], tokens[2]);
+                *maxfds = std::max(*maxfds, serverSocket);
+                std::cout << "Connected to server on socket: " << serverSocket << std::endl;
+            }
+            
         }
         else
         {
@@ -434,11 +448,11 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
     }
     else if ((tokens[0].compare("LISTSERVERS") == 0) && (tokens.size() == 1))
     {
-        std::string msg;
+        std::string msg = "SERVERS ";
 
         for (auto const &server : servers)
         {
-            msg += "SERVERS " + server.second->name + "," + server.second->ip + "," + server.second->port + ";";
+            msg +=  server.second->name + "," + server.second->ip + "," + server.second->port + ";";
         }
 
         // Reducing the msg length by 1 loses the excess "," - which
@@ -457,13 +471,10 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
             {
                 serverSocket = server.second->sock;
             }
-            //msg +="SERVERS " + server.second->name + "," + server.second->ip + "," + server.second->port + ";";
         }
         msg = "LISTSERVERS," + group;
         msg = '\x01' + msg;
         msg = msg + '\x04';
-        // Reducing the msg length by 1 loses the excess "," - which
-        // granted is totally cheating.
         send(serverSocket, msg.c_str(), msg.length(), 0);
     }
     else
@@ -527,37 +538,6 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
         //   while(servers){}
     }
     
-/*
-  else if((tokens[0].compare("ACCEPTED") == 0) && (tokens.size() == 2))
-  {
-
-    servers[serverSocket]->name = tokens[1];
-    std::cout << "name set " + tokens[1] << std::endl;
-
-
-  }
-  else if((tokens[0].compare("CONNECT") == 0) && (tokens.size() == 2))
-  {
-    if (servers.size() < 5){
-        servers[serverSocket]->name = tokens[1];
-        std::string sending = "";
-        sending += '\x01';
-        sending += "ACCEPTED,";
-        sending += GROUP;
-        sending += '\x04';
-        send(serverSocket, sending.c_str(), sending.length(),0);
-        std::cout << "name set " + tokens[1] << std::endl;
-    }
-    else{
-        std::string sending = "";
-        sending += '\x01';
-        sending += "DECLINED,";
-        sending += GROUP;
-        sending += '\x04';
-        send(serverSocket, sending.c_str(), sending.length(),0);
-        closeServer(serverSocket, openSockets, maxfds);
-    }
-*/
 
     else if ((tokens[0].compare("LISTSERVERS") == 0) && (tokens.size() == 2))
     {
@@ -577,7 +557,12 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
     else if ((tokens[0].compare("SEND_MSG") == 0) && (tokens.size() >= 3))
     {
         if(tokens[2] == thisServer.name ){
-            thisServer.addMsg(std::string(buffer));
+            std::string msg = "From :" + tokens[1] + " To :" + tokens[2];
+            for (auto i = tokens.begin() + 3; i != tokens.end(); i++)
+            {
+                msg += *i;
+            }
+            thisServer.addMsg(msg);
         }
         else {
             for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
@@ -590,18 +575,16 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
             }
         }
     }
-    else if ((tokens[0].compare("GET_MSG") == 0) && (tokens.size() >= 3))
+    else if ((tokens[0].compare("GET_MSG") == 0) && (tokens.size() == 2))
     {
-        if(tokens[2] == thisServer.name ){
-            thisServer.addMsg(std::string(buffer));
-        }
-        else {
-            for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
+        for (auto const &pair : servers) 
+        {
+            if (pair.second->name.compare(tokens[1]) == 0)
             {
-                if (pair.second->name.compare(tokens[2]) == 0)
-                {
-                    pair.second->addMsg(std::string(buffer));
-                    break;
+                std::string msg;
+                while(pair.second->msgs > 0){
+                    msg = pair.second->getMsg();
+                    send(serverSocket, msg.c_str(), msg.length(), 0);
                 }
             }
         }
@@ -612,8 +595,8 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
         msg = "Unknown command from server:";
         std::string command = std::string(buffer);
         msg += " " + command;
-        std::cout << "Unknown command from server:" << buffer << std::endl;
-        send(serverSocket, msg.c_str(), msg.length(), 0);
+        std::cout << msg << std::endl;
+        // send(serverSocket, msg.c_str(), msg.length(), 0);
     }
 }
 
@@ -637,6 +620,7 @@ int main(int argc, char *argv[])
         printf("Usage: chat_server <ip port>\n");
         exit(0);
     }
+    // int PORT = atoi(argv[2]);
     thisServer.name = GROUP;
     thisServer.port = argv[1];
     thisServer.ip = inet_ntoa(getLocalIpAddr("8.8.8.8"));
@@ -719,7 +703,11 @@ int main(int argc, char *argv[])
                 // create a new client to store information.
                 servers[serverSock] = new Server(serverSock, inet_ntoa(server.sin_addr), std::to_string(htons(server.sin_port)));
                 // Decrement the number of sockets waiting to be dealt with
-                std::string msg = "\1LISTSERVERS,V_Group_Solvi\4";
+                        std::string msg;
+                        std::string group(GROUP);
+                        msg = '\x01';
+                        msg += "LISTSERVERS," + group;
+                        msg += '\x04';
                 //serverCommand(serverSock, &openSockets, &maxfds, (char *) msg.c_str());
                 send(serverSock, msg.c_str(), msg.length(), 0);
                 n--;
@@ -736,6 +724,7 @@ int main(int argc, char *argv[])
                     if (FD_ISSET(client->sock, &readSockets))
                     {
                         // recv() == 0 means client has closed connection
+                        memset(buffer, 0, sizeof(buffer));
                         if (recv(client->sock, buffer, sizeof(buffer), MSG_DONTWAIT) == 0)
                         {
                             printf("Client closed connection: %d", client->sock);
@@ -760,6 +749,7 @@ int main(int argc, char *argv[])
                     if (FD_ISSET(server->sock, &readSockets))
                     {
                         // recv() == 0 means client has closed connection
+                        memset(buffer, 0, sizeof(buffer));
                         int bytesRecv;
                         if ((bytesRecv = recv(server->sock, buffer, sizeof(buffer), MSG_DONTWAIT)) == 0)
                         {
@@ -773,15 +763,29 @@ int main(int argc, char *argv[])
                         else
                         {
                             std::cout << "Bytes received: " << bytesRecv << std::endl;
+                            std::cout << buffer << std::endl;
                             if ((buffer[0] == '\x01') && (buffer[bytesRecv - 1] == '\x04'))
                             {
-                                
                                 std::cout << "Right format" << std::endl;
-                                char bufferToParse[1024];
-                                bzero(bufferToParse, sizeof(bufferToParse));
-                                memcpy(bufferToParse, buffer + 1, bytesRecv - 2);
-                                serverCommand(server->sock, &openSockets, &maxfds,
+                                std::vector<std::string> tokens;
+                                std::string token;
+
+                                // Split command from client into tokens for parsing
+                                std::stringstream stream(buffer);
+                                while (stream.good())
+                                {
+                                    getline(stream, token, '\x04');
+                                    if(strlen(token.c_str()) > 0){
+                                        tokens.push_back(token);
+                                    }
+                                }
+                                for(u_int i = 0; i < tokens.size(); i++){
+                                    char bufferToParse[5000];
+                                    bzero(bufferToParse, sizeof(bufferToParse));
+                                    memcpy(bufferToParse, tokens[i].c_str() + 1 , tokens[i].length());
+                                    serverCommand(server->sock, &openSockets, &maxfds,
                                               bufferToParse);
+                                }
                             }
                         }
                     }
