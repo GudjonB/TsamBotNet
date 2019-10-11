@@ -110,9 +110,6 @@ int main(int argc, char *argv[])
     {
         bzero(buffer, sizeof(buffer));
         fgets(buffer, sizeof(buffer) - 1, stdin);
-        //fgets(buffer + 1, sizeof(buffer) - 1, stdin);
-        //buffer[0] = 0x01;
-        //buffer[strlen(buffer)] = 0x04;
         nwrite = send(serverSocket, buffer, strlen(buffer), 0);
 
         if (nwrite == -1)

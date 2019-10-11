@@ -36,7 +36,7 @@
 
 #define BACKLOG 5 // Allowed length of queue of waiting connections
 #define PORT 4002
-#define GROUP "V_Group_96"
+#define GROUP "P3_GROUP_96"
 
 // Simple class for handling connections from clients.
 //
@@ -311,12 +311,12 @@ int connectToServer(std::string portno, std::string ipAddress)
         return -1;
     }
 
-    std::string sending = "";
-    sending += '\x01';
-    sending += "LISTSERVERS,";
-    sending += GROUP;
-    sending += '\x04';
-    send(serverSocket, sending.c_str(), sending.length(), 0);
+    // std::string sending = "";
+    // sending += '\x01';
+    // sending += "LISTSERVERS,";
+    // sending += GROUP;
+    // sending += '\x04';
+    // send(serverSocket, sending.c_str(), sending.length(), 0);
 
     return serverSocket;
 }
@@ -467,6 +467,12 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
                 servers[serverSocket] = new Server(serverSocket, tokens[1], tokens[2]);
                 *maxfds = std::max(*maxfds, serverSocket);
                 std::cout << "Connected to server on socket: " << serverSocket << std::endl;
+                std::string sending = "";
+                sending += '\x01';
+                sending += "LISTSERVERS,";
+                sending += GROUP;
+                sending += '\x04';
+                send(serverSocket, sending.c_str(), sending.length(), 0);
             }
         }
         else
@@ -530,6 +536,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
         if ((pos = token.find_first_of(";")) != std::string::npos)
         {
             tokens.push_back(token.substr(0, pos));
+            tokens.push_back(token.substr(pos+1, token.length()-1));
         }
         else
         {
@@ -563,8 +570,37 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
         servers[serverSocket]->name = tokens[1];
         servers[serverSocket]->ip = tokens[2];
         servers[serverSocket]->port = tokens[3];
+        for(int i = 4; ((i+3) < tokens.size()) && (servers.size() < 5); i += 3){
+            int found = 0;
+            for (auto const &pair : servers)
+            {
+                if (pair.second->name.compare(tokens[i]) == 0)
+                {
+                    found = 1;
+                    break;
+                }
+            }
+            if(!found && (tokens[i].compare(thisServer.name) != 0) && (tokens[i].length() != 0)){
+                std::cout <<"name "+tokens[i] +" port" + tokens[i+2] + " ip" +tokens[i+1] << std::endl;
+                int newServerSock = connectToServer(tokens[i+2],tokens[i+1]);
+                if (newServerSock == -1){
+                    std::string msg = "Failed to connect to server...";
+                }
+                else{
+                    FD_SET(newServerSock, openSockets);
+                    servers[newServerSock] = new Server(newServerSock, tokens[i+1], tokens[i+2]);
+                    servers[newServerSock]->name = tokens[i];
+                    *maxfds = std::max(*maxfds, newServerSock);
+                    std::cout << "Connected to server on socket: " << newServerSock << std::endl;
+                }
+            }
+        }
+
         std::cout << buffer << std::endl;
-        //   while(servers){}
+        for (auto const &pair : clients) // to make sure we have the server we want to msg in our map
+            {
+                send(pair.first, buffer, strlen(buffer), 0);
+            }
     }
 
     else if ((tokens[0].compare("LISTSERVERS") == 0) && (tokens.size() == 2))
@@ -586,12 +622,17 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
     {
         if (tokens[2] == thisServer.name)
         {
-            std::string msg = "From :" + tokens[1] + " To :" + tokens[2];
+            std::string msg = "From :" + tokens[1] + " To : " + tokens[2] + " >> ";
             for (auto i = tokens.begin() + 3; i != tokens.end(); i++)
             {
                 msg += *i;
             }
-            thisServer.addMsg(msg);
+            for (auto const &pair : clients) // to make sure we have the server we want to msg in our map
+            {
+                send(pair.first, buffer, strlen(buffer), 0);
+            }
+            
+
         }
         else
         {
@@ -637,7 +678,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
         std::string command = std::string(buffer);
         msg += " " + command;
         std::cout << msg << std::endl;
-        // send(serverSocket, msg.c_str(), msg.length(), 0);
+        send(serverSocket, msg.c_str(), msg.length(), 0);
     }
 }
 
@@ -653,7 +694,7 @@ int main(int argc, char *argv[])
     int maxfds;           // Passed to select() as max fd in set
     struct sockaddr_in client, server;
     socklen_t clientLen;
-    char buffer[1025]; // buffer for reading from clients
+    char buffer[5000]; // buffer for reading from clients
 
     if (argc != 2)
     {
@@ -851,3 +892,4 @@ int main(int argc, char *argv[])
         }
     }
 }
+
