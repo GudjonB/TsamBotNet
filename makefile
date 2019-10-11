@@ -6,4 +6,4 @@ clean:
 	rm -f client
 	rm -f tsamvgroup96
 run:
-	./tsamvgroup96 4099
+	./tsamvgroup96 4096

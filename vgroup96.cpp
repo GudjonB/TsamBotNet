@@ -341,10 +341,10 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
     }
     else if (tokens[0].compare("LEAVE") == 0)
     {
+        int serverSock;
         if (tokens.size() == 2)
         {
             std::string msg;
-            int serverSock;
             for (auto const &server : servers)
             {
                 if (server.second->name == tokens[1])
@@ -355,6 +355,16 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
                     msg = msg + '\x04';        
                     send(serverSock, msg.c_str(), msg.length(), 0);
                     std::cout << "Sent LEAVE to server " << tokens[1] << std::endl;
+                    closeServer(serverSock, openSockets, maxfds);
+                }
+            }
+        }
+        else if(tokens.size() == 3){
+            for (auto const &server : servers)
+            {
+                if ((server.second->ip == tokens[1]) && (server.second->port == tokens[2]))
+                {
+                    serverSock = server.second->sock;
                     closeServer(serverSock, openSockets, maxfds);
                 }
             }
@@ -414,6 +424,25 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
     }
     else if ((tokens[0].compare("SENDMSG") == 0) && (tokens.size() >= 2))
     {
+        if(tokens[1].compare("FORWARD")){
+            for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
+            {
+                if (pair.second->name.compare(tokens[2]) == 0)
+                {
+                    std::string msg, group(GROUP);
+                    msg += '\x01';
+                    msg += "SEND_MSG," + group + "," + tokens[3] + ",";
+                    for (auto i = tokens.begin() + 2; i != tokens.end(); i++)
+                    {
+                        msg += *i + " ";
+                    }
+                    msg += '\x04';
+                    send(pair.first, msg.c_str(), msg.length(), 0);
+                    break;
+                }
+            }
+        }
+        else {
         for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
         {
             if (pair.second->name.compare(tokens[1]) == 0)
@@ -429,6 +458,7 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
                 send(pair.first, msg.c_str(), msg.length(), 0);
                 break;
             }
+        }
         }
     }
     else if ((tokens[0].compare("GETMSG") == 0) && (tokens.size() == 2))
@@ -570,7 +600,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
         servers[serverSocket]->name = tokens[1];
         servers[serverSocket]->ip = tokens[2];
         servers[serverSocket]->port = tokens[3];
-        for(int i = 4; ((i+3) < tokens.size()) && (servers.size() < 5); i += 3){
+        for(u_int i = 4; ((i+3) < tokens.size()) && (servers.size() < 5); i += 3){
             int found = 0;
             for (auto const &pair : servers)
             {
@@ -629,7 +659,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
             }
             for (auto const &pair : clients) // to make sure we have the server we want to msg in our map
             {
-                send(pair.first, buffer, strlen(buffer), 0);
+                send(pair.first, msg.c_str(), msg.length(), 0);
             }
             
 
