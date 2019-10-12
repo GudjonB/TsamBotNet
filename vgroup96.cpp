@@ -764,7 +764,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
             
             if (pair.second->name.compare(tokens[1]) != 0)
             {
-                list = ",";
+                list += ",";
                 list += pair.second-> name;
                 list = list + "," + std::to_string(pair.second->msgs);
             }
