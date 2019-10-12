@@ -436,7 +436,7 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
             }
         }
     }
-    else if ((tokens[0].compare("SENDMSG") == 0) && (tokens.size() >= 2))
+    else if ((tokens[0].compare("SENDMSG") == 0) && (tokens.size() > 2))
     {
         if(tokens[1].compare("FORWARD") == 0){
             for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
@@ -489,6 +489,12 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
                 }
             }
         }
+    }
+    else if ((tokens[0].compare("SENDMSG") == 0) && (tokens.size() <= 2))
+    {
+        std::string msg = "Message is empty, nothing sent";
+        send(clientSocket, msg.c_str(), msg.length(), 0);
+
     }
     else if ((tokens[0].compare("GETMSG") == 0) && (tokens.size() == 2))
     {
