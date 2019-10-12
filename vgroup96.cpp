@@ -511,7 +511,16 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
     }
     else if ((tokens[0].compare("SERVER") == 0) && (tokens.size() == 3))
     {
-        if (servers.size() < 5)
+        int found = 0;
+            for (auto const &pair : servers)
+            {
+                if ((pair.second->ip.compare(tokens[1]) == 0) && (pair.second->port.compare(tokens[2]) == 0))
+                {
+                    found = 1;
+                    break;
+                }
+            }
+        if (servers.size() < 5 && !found)
         {
             int serverSocket = connectToServer(tokens[2], tokens[1]);
             if (serverSocket == -1)
@@ -535,8 +544,14 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
         }
         else
         {
-            std::string msg = "To many servers connected";
-            send(clientSocket, msg.c_str(), msg.length(), 0);
+            if(found){
+                std::string msg = "Server already connected";
+                send(clientSocket, msg.c_str(), msg.length(), 0);
+            }
+            else{
+                std::string msg = "To many servers connected";
+                send(clientSocket, msg.c_str(), msg.length(), 0);
+            }
         }
     }
     else if ((tokens[0].compare("LISTSERVERS") == 0) && (tokens.size() == 1))
