@@ -682,7 +682,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
                 std::cout <<"name "+tokens[i] +" port" + tokens[i+2] + " ip" +tokens[i+1] << std::endl;
                 int newServerSock = connectToServer(tokens[i+2],tokens[i+1]);
                 if (newServerSock == -1){
-                    std::string msg = "Failed to connect to server...";
+                    std::string error = "Failed to connect to server...";
                 }
                 else{
                     FD_SET(newServerSock, openSockets);
@@ -694,11 +694,17 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
             }
         }
 
-        std::cout << buffer << std::endl;
+        std::string msg = "";
+        msg += "Server respone from: " + tokens[1] + "\n";
+
+        for(int i = 1; (i + 3) < (int) tokens.size(); i = i + 3) 
+        {
+            msg += "Name: " + tokens[i] + "  IP: " + tokens[i + 1] + "  Port: " + tokens[i + 2] + "\n";
+        }
         for (auto const &pair : clients) // to make sure we have the server we want to msg in our map
-            {
-                send(pair.first, buffer, strlen(buffer), 0);
-            }
+        {
+            send(pair.first, msg.c_str(), msg.length(), 0);
+        }
     }
 
     else if ((tokens[0].compare("LISTSERVERS") == 0) && (tokens.size() == 2))
@@ -784,7 +790,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
         for (auto const &pair : servers)
         {
             
-            if ((pair.second->name.compare(tokens[1]) != 0) && (pair.second->msgs != 0))
+            if((pair.second->name.compare(tokens[1]) != 0) && (pair.second->msgs != 0))
             {
                 msg += "," + pair.second->name + "," + std::to_string(pair.second->msgs);
             }
@@ -795,10 +801,18 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
     }
     else if ((tokens[0].compare("STATUSRESP") == 0)) //&& (tokens.size() >= 3))
     {
-        std::cout << buffer << std::endl;
+        
+        std::string msg = "";
+        msg += "Status respone from: " + tokens[1] + " To: " + tokens[2] + "\n";
+
+        for(int i = 3; i < (int) tokens.size(); i = i + 2) 
+        {
+            msg += "Server: " + tokens[i] + " has " + tokens[i + 1] + " messages\n";
+        }
+        std::cout << msg << std::endl;
         for (auto const &pair : clients)
         {
-            send(pair.first, buffer, strlen(buffer), 0);
+            send(pair.first, msg.c_str(), msg.length(), 0);
         }
     }
     else
