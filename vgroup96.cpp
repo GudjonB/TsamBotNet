@@ -773,7 +773,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
         msg += '\x04';
         send(serverSocket, msg.c_str(), msg.length(), 0);
     }
-    else if ((tokens[0].compare("STATUSRESP") == 0) && (tokens.size() > 3))
+    else if ((tokens[0].compare("STATUSRESP") == 0)) //&& (tokens.size() >= 3))
     {
         std::cout << buffer << std::endl;
         for (auto const &pair : clients)
