@@ -37,7 +37,8 @@
 
 #define BACKLOG 5 // Allowed length of queue of waiting connections
 #define PORT 4101
-#define GROUP "GUDJON"
+#define GROUP "SOLVI"
+#define CLIENTAUTH "CLIENT96_1337"
 
 // Simple class for handling connections from clients.
 //
@@ -878,20 +879,41 @@ int main(int argc, char *argv[])
             {
                 clientSock = accept(listenLocalSock, (struct sockaddr *)&client,
                                     &clientLen);
-                printf("accept client connection:ip :%s  port :%u\n", inet_ntoa(client.sin_addr), htons(client.sin_port));
-                // Add new client to the list of open sockets
-                FD_SET(clientSock, &openSockets);
+                printf("Client trying connection:ip :%s  port :%u\n", inet_ntoa(client.sin_addr), htons(client.sin_port));
+                int bytesRecv;
+                if((bytesRecv = recv(clientSock, buffer, sizeof(buffer), MSG_DONTWAIT)) == 0)
+                {
+                    std::cout << "Unauthorized client trying to connect" << std::endl;
 
-                // And update the maximum file descriptor
-                maxfds = std::max(maxfds, clientSock);
+                }
+                else
+                {
+                    std::string authToken(buffer);
+                    if(authToken.compare(CLIENTAUTH) != 0) 
+                    {
+                        std::cout << "Unauthorized client trying to connect" << std::endl;
+                    }
+                    else
+                    {
+                        // Add new client to the list of open sockets
+                        FD_SET(clientSock, &openSockets);
 
-                // create a new client to store information.
-                clients[clientSock] = new Client(clientSock);
+                        // And update the maximum file descriptor
+                        maxfds = std::max(maxfds, clientSock);
 
-                // Decrement the number of sockets waiting to be dealt with
-                n--;
+                        // create a new client to store information.
+                        clients[clientSock] = new Client(clientSock);
 
-                printf("Client connected on server: %d\n", clientSock);
+                        // Decrement the number of sockets waiting to be dealt with
+                        n--;
+
+                        printf("Client connected on server: %d\n", clientSock);
+                        
+                    }
+                    
+                }
+                
+
             }
             if (FD_ISSET(listenSock, &readSockets) && servers.size() < 5)
             {
