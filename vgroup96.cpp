@@ -20,6 +20,7 @@
 #include <algorithm>
 #include <map>
 #include <vector>
+#include <fstream>
 
 #include <iostream>
 #include <sstream>
@@ -104,6 +105,14 @@ std::map<int, Server *> servers; // Lookup table for per Server information
 Server thisServer = Server();    // global variable to referenc this server
 int listenSock;                  // Socket for connections to server
 int listenLocalSock;             // Socket for connections to server
+
+
+/*void logger(std::string msg)
+{
+    std::ofstream logfile;
+    if(logfile.open("log.txt"))
+
+}*/
 
 // Gets the computers (that is running the program) ip address on the internet by making
 // a tcp connection to googles dns server and then retrieving the ip address it used.
@@ -424,7 +433,7 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
     }
     else if ((tokens[0].compare("SENDMSG") == 0) && (tokens.size() >= 2))
     {
-        if(tokens[1].compare("FORWARD")){
+        if(tokens[1].compare("FORWARD") == 0){
             for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
             {
                 if (pair.second->name.compare(tokens[2]) == 0)
@@ -443,22 +452,22 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
             }
         }
         else {
-        for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
-        {
-            if (pair.second->name.compare(tokens[1]) == 0)
+            for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
             {
-                std::string msg, group(GROUP);
-                msg += '\x01';
-                msg += "SEND_MSG," + group + "," + tokens[1] + ",";
-                for (auto i = tokens.begin() + 2; i != tokens.end(); i++)
+                if (pair.second->name.compare(tokens[1]) == 0)
                 {
-                    msg += *i + " ";
+                    std::string msg, group(GROUP);
+                    msg += '\x01';
+                    msg += "SEND_MSG," + group + "," + tokens[1] + ",";
+                    for (auto i = tokens.begin() + 2; i != tokens.end(); i++)
+                    {
+                        msg += *i + " ";
+                    }
+                    msg += '\x04';
+                    send(pair.first, msg.c_str(), msg.length(), 0);
+                    break;
                 }
-                msg += '\x04';
-                send(pair.first, msg.c_str(), msg.length(), 0);
-                break;
             }
-        }
         }
     }
     else if ((tokens[0].compare("GETMSG") == 0) && (tokens.size() == 2))
@@ -538,6 +547,24 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
             }
         }
         msg = "LISTSERVERS," + group;
+        msg = '\x01' + msg;
+        msg = msg + '\x04';
+        send(serverSocket, msg.c_str(), msg.length(), 0);
+    }
+    else if ((tokens[0].compare("STATUSREQ") == 0) && (tokens.size() == 2))
+    {
+        std::string msg;
+        std::string group(GROUP);
+        int serverSocket;
+
+        for (auto const &server : servers)
+        {
+            if (tokens[1] == server.second->name)
+            {
+                serverSocket = server.second->sock;
+            }
+        }
+        msg = "STATUSREQ," + group;
         msg = '\x01' + msg;
         msg = msg + '\x04';
         send(serverSocket, msg.c_str(), msg.length(), 0);
@@ -699,6 +726,35 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
             msg += "GET_MSG," + group;
             msg += '\x04';
             send(serverSocket, msg.c_str(), msg.length(), 0);
+        }
+    }
+    else if ((tokens[0].compare("STATUSREQ") == 0) && (tokens.size() == 2))
+    {
+        std::string list, msg, group(GROUP);
+
+        for (auto const &pair : servers)
+        {
+            list = ",";
+            list += pair.second-> name;
+            list = list + "," + std::to_string(pair.second->msgs);
+            if (pair.second->name.compare(tokens[1]) == 0)
+            {
+                
+                msg = '\x01';
+                msg += "STATUSRESP,";
+                msg = msg + group + "," + pair.second->name;
+            }
+        }
+        msg += list;
+        msg += '\x04';
+        send(serverSocket, msg.c_str(), msg.length(), 0);
+    }
+    else if ((tokens[0].compare("STATUSRESP") == 0) && (tokens.size() > 3))
+    {
+        std::cout << buffer << std::endl;
+        for (auto const &pair : clients)
+        {
+            send(pair.first, buffer, strlen(buffer), 0);
         }
     }
     else
