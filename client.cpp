@@ -27,6 +27,8 @@
 #include <thread>
 #include <map>
 
+#define CLIENTAUTH "CLIENT96_1337"
+
 // Threaded function for handling responss from server
 
 void listenServer(int serverSocket)
@@ -101,6 +103,7 @@ int main(int argc, char *argv[])
         perror("Connect failed: ");
         exit(0);
     }
+    send(serverSocket, CLIENTAUTH, strlen(CLIENTAUTH), 0);
 
     // Listen and print replies from server
     std::thread serverThread(listenServer, serverSocket);
