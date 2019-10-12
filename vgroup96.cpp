@@ -37,7 +37,7 @@
 
 #define BACKLOG 5 // Allowed length of queue of waiting connections
 #define PORT 4101
-#define GROUP "SOLVI"
+#define GROUP "GUDJON"
 
 // Simple class for handling connections from clients.
 //
@@ -764,12 +764,10 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
             
             if (pair.second->name.compare(tokens[1]) != 0)
             {
-                list += ",";
-                list += pair.second-> name;
-                list = list + "," + std::to_string(pair.second->msgs);
+                msg += "," + pair.second->name + "," + std::to_string(pair.second->msgs);
             }
         }
-        msg += list;
+        // msg += list;
         msg += '\x04';
         send(serverSocket, msg.c_str(), msg.length(), 0);
     }
