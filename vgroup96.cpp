@@ -718,7 +718,10 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
             {
                 if (pair.second->name.compare(tokens[2]) == 0)
                 {
-                    send(pair.first, buffer, strlen(buffer), 0);
+                    std::string msg(buffer);
+                    msg = '\x01' + msg;
+                    msg += '\x04';
+                    send(pair.first, msg.c_str(), msg.length(), 0);
                     break;
                 }
             }
