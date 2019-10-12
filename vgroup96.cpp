@@ -107,12 +107,16 @@ int listenSock;                  // Socket for connections to server
 int listenLocalSock;             // Socket for connections to server
 
 
-/*void logger(std::string msg)
+void logger(std::string msg)
 {
+    std::time_t result = std::time(nullptr);
+    std::string timeString = std::asctime(std::localtime(&result));
     std::ofstream logfile;
-    if(logfile.open("log.txt"))
-
-}*/
+    logfile.open("log.txt", std::ofstream::out | std::ofstream::app);
+    std::cout << "before writing " << timeString << std::endl;
+    logfile <<  timeString.substr(0, timeString.length() - 1) + " " + msg + "\n";
+    logfile.close();
+}
 
 // Gets the computers (that is running the program) ip address on the internet by making
 // a tcp connection to googles dns server and then retrieving the ip address it used.
@@ -479,6 +483,7 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
                     }
                     msg += '\x04';
                     send(pair.first, msg.c_str(), msg.length(), 0);
+                    logger(msg);
                     break;
                 }
             }
@@ -702,6 +707,8 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
             {
                 send(pair.first, msg.c_str(), msg.length(), 0);
             }
+            std::string logtext(buffer);
+            logger(logtext);
             
 
         }
