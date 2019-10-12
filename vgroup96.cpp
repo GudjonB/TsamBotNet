@@ -59,7 +59,7 @@ public:
     std::string name;         // Limit length of name of server's user
     std::string ip;           // the ip of the server
     std::string port;         // the port of the server
-    std::string msgVector[5]; // vector for messages for this server
+    std::string msgArray[5]; // vector for messages for this server
     int msgs;
     int newestMsg;
 
@@ -71,20 +71,20 @@ public:
         if (msgs >= 5)
         {
             newestMsg = (newestMsg + 1) % 6;
-            msgVector[newestMsg] = msg;
+            msgArray[newestMsg] = msg;
         }
         else
         {
             msgs++;
             newestMsg = (newestMsg + 1) % 6;
-            msgVector[newestMsg] = msg;
+            msgArray[newestMsg] = msg;
         }
     }
     std::string getMsg()
     {
         if (msgs > 0)
         {
-            std::string msg = msgVector[newestMsg]; //TODO kannski adda msg = NULL
+            std::string msg = msgArray[newestMsg]; //TODO kannski adda msg = NULL
             (newestMsg == 1 && msgs > 1) ? newestMsg = 5 : newestMsg--;
             msgs--;
             return msg;
