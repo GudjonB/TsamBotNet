@@ -757,7 +757,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
         std::string list, msg, group(GROUP);
         msg = '\x01';
         msg += "STATUSRESP,";
-        msg += group + "," + token[1];
+        msg += group + "," + tokens[1];
 
         for (auto const &pair : servers)
         {
