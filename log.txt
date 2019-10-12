@@ -14,3 +14,4 @@ Sat Oct 12 17:50:33 201 SEND_MSG,P3_GROUP_96,solvi,pikusafi 
 Sat Oct 12 17:51:28 2019 SEND_MSG,P3_GROUP_96,solvi,pikudrulla 
 Sat Oct 12 18:23:53 2019 From :solvi To : P3_GROUP_96 >> rassri[ingar 
 Sat Oct 12 18:26:15 2019 SEND_MSG,solvi,P3_GROUP_96,prump i piku og ostur 
+Sat Oct 12 18:35:54 2019 SEND_MSG,GUDJON,SOLVI,yo dude 

@@ -460,7 +460,7 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
             {
                 std::string msg, group(GROUP);
                 msg += '\x01';
-                msg += "SEND_MSG," + group + "," + tokens[3] + ",";
+                msg += "SEND_MSG," + group + "," + pair.second->name + ",";
                 for (auto i = tokens.begin() + 3; i != tokens.end(); i++)
                 {
                     msg += *i + " ";
