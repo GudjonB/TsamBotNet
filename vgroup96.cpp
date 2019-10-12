@@ -37,7 +37,7 @@
 
 #define BACKLOG 5 // Allowed length of queue of waiting connections
 #define PORT 4002
-#define GROUP "P3_GROUP_96"
+#define GROUP "GUDJON"
 
 // Simple class for handling connections from clients.
 //
@@ -445,7 +445,7 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
                     std::string msg, group(GROUP);
                     msg += '\x01';
                     msg += "SEND_MSG," + group + "," + tokens[3] + ",";
-                    for (auto i = tokens.begin() + 3 i != tokens.end(); i++)
+                    for (auto i = tokens.begin() + 3 ;i != tokens.end(); i++)
                     {
                         msg += *i + " ";
                     }
