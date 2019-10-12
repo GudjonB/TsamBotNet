@@ -468,6 +468,7 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
                 }
                 msg[msg.length()-1] = '\x04';
                 send(pair.first, msg.c_str(), msg.length(), 0);
+                logger(msg);
             }
         }
         else {
@@ -563,13 +564,12 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
     }
     else if ((tokens[0].compare("LISTSERVERS") == 0) && (tokens.size() == 1))
     {
-        std::string msg = "SERVERS ";
+        std::string msg = "\nOur SERVERS:\n";
 
         for (auto const &server : servers)
         {
-            msg += server.second->name + "," + server.second->ip + "," + server.second->port + ";";
+            msg += "  Name: " + server.second->name + "  IP: " + server.second->ip + "  Port: " + server.second->port + "\n";
         }
-
         // Reducing the msg length by 1 loses the excess "," - which
         // granted is totally cheating.
         send(clientSocket, msg.c_str(), msg.length(), 0);
@@ -803,7 +803,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
     {
         
         std::string msg = "";
-        msg += "Status respone from: " + tokens[1] + " To: " + tokens[2] + "\n";
+        msg += "\nStatus respone from: " + tokens[1] + " To: " + tokens[2] + "\n";
 
         for(int i = 3; i < (int) tokens.size(); i = i + 2) 
         {
