@@ -37,7 +37,7 @@
 
 #define BACKLOG 5 // Allowed length of queue of waiting connections
 #define PORT 4101
-#define GROUP "GUDJON"
+#define GROUP "SOLVI"
 
 // Simple class for handling connections from clients.
 //
@@ -755,18 +755,18 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
     else if ((tokens[0].compare("STATUSREQ") == 0) && (tokens.size() == 2))
     {
         std::string list, msg, group(GROUP);
+        msg = '\x01';
+        msg += "STATUSRESP,";
+        msg += group + "," + token[1];
 
         for (auto const &pair : servers)
         {
-            list = ",";
-            list += pair.second-> name;
-            list = list + "," + std::to_string(pair.second->msgs);
-            if (pair.second->name.compare(tokens[1]) == 0)
+            
+            if (pair.second->name.compare(tokens[1]) != 0)
             {
-                
-                msg = '\x01';
-                msg += "STATUSRESP,";
-                msg = msg + group + "," + pair.second->name;
+                list = ",";
+                list += pair.second-> name;
+                list = list + "," + std::to_string(pair.second->msgs);
             }
         }
         msg += list;
