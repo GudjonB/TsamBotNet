@@ -36,8 +36,8 @@
 #endif
 
 #define BACKLOG 5 // Allowed length of queue of waiting connections
-#define PORT 4002
-#define GROUP "GUDJON"
+#define PORT 4101
+#define GROUP "P3_GROUP_96"
 
 // Simple class for handling connections from clients.
 //
@@ -449,7 +449,7 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
                     {
                         msg += *i + " ";
                     }
-                    msg += '\x04';
+                    msg[msg.length()-1] = '\x04';
                     send(pair.first, msg.c_str(), msg.length(), 0);
                     break;
                 }
@@ -465,7 +465,7 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
                 {
                     msg += *i + " ";
                 }
-                msg += '\x04';
+                msg[msg.length()-1] = '\x04';
                 send(pair.first, msg.c_str(), msg.length(), 0);
             }
         }
@@ -481,7 +481,7 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
                     {
                         msg += *i + " ";
                     }
-                    msg += '\x04';
+                    msg[msg.length()-1] = '\x04';
                     send(pair.first, msg.c_str(), msg.length(), 0);
                     logger(msg);
                     break;
