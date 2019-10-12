@@ -37,7 +37,7 @@
 
 #define BACKLOG 5 // Allowed length of queue of waiting connections
 #define PORT 4101
-#define GROUP "SOLVI"
+#define GROUP "P3_GROUP_96"
 #define CLIENTAUTH "CLIENT96_1337"
 
 // Simple class for handling connections from clients.
