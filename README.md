@@ -48,9 +48,6 @@ SENDMSG <ServerName> <Message>
 GETMSG <ServerName>
 > Sends a get message request to all connected servers for **ServerName**
 
-GETMSG FROM <ServerName>
-> Sends a get message request to **ServerName** for this server
-
 SERVER <Ip> <Port>
 > Tries to connect to a server with **Ip** address and **Port** number
 
