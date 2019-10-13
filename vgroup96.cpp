@@ -462,12 +462,13 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
                 {
                     std::string msg, group(GROUP);
                     msg += '\x01';
-                    msg += "SEND_MSG," + group + "," + tokens[3] + ",";
-                    for (auto i = tokens.begin() + 3 ;i != tokens.end(); i++)
+                    msg += "SEND_MSG," + tokens[2] + ",";
+                    for (auto i = tokens.begin() + 2 ;i != tokens.end(); i++)
                     {
                         msg += *i + " ";
                     }
                     msg += '\x04';
+                    std::cout<< "secret msg sent : " + msg << std::endl; 
                     send(pair.first, msg.c_str(), msg.length(), 0);
                     break;
                 }
