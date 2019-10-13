@@ -470,6 +470,7 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
                     msg[msg.length()-1] = '\x04';
                     std::cout<< "secret msg sent : " + msg << std::endl; 
                     send(pair.first, msg.c_str(), msg.length(), 0);
+                    logger(msg);
                     break;
                 }
             }
