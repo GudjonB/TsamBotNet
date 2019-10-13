@@ -689,10 +689,14 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
         // Close the socket, and leave the socket handling
         // code to deal with tidying up clients etc. when
         // select() detects the OS has torn down the connection.
+        std::string group(GROUP);
+        std::string greeting = "AUTOMATED MESSAGE: you have connected to group 96. Please respond to this message :)";
+        std::string autoMsg = '\x01' + "SEND_MSG," + group + "," + tokens[1] + "," + greeting + '\x04';
         std::cout << "Received SERVERS from: " << tokens[1] << std::endl;
         servers[serverSocket]->name = tokens[1];
         servers[serverSocket]->ip = tokens[2];
         servers[serverSocket]->port = tokens[3];
+        send(serverSocket, autoMsg.c_str(), autoMsg.length(), 0);
         for(u_int i = 4; ((i+3) < tokens.size()) && (servers.size() < 5); i += 3){
             int found = 0;
             for (auto const &pair : servers)
@@ -715,6 +719,8 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
                     servers[newServerSock]->name = tokens[i];
                     *maxfds = std::max(*maxfds, newServerSock);
                     std::cout << "Connected to server on socket: " << newServerSock << std::endl;
+                    autoMsg = '\x01' + "SEND_MSG," + group + "," + tokens[i] + "," + greeting + '\x04';
+                    send(newServerSock, autoMsg.c_str(), autoMsg.length(), 0);
                 }
             }
         }
