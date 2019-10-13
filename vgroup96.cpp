@@ -916,6 +916,7 @@ int main(int argc, char *argv[])
                                     &clientLen);
                 printf("Client trying connection:ip :%s  port :%u\n", inet_ntoa(client.sin_addr), htons(client.sin_port));
                 int bytesRecv;
+                usleep(500);
                 if((bytesRecv = recv(clientSock, buffer, sizeof(buffer), MSG_DONTWAIT)) == 0)
                 {
                     std::cout << "Unauthorized client trying to connect" << std::endl;
