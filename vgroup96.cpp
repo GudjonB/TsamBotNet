@@ -463,30 +463,12 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
                 {
                     std::string msg, group(GROUP);
                     msg += '\x01';
-                    msg += "SEND_MSG," + group + "," + "ORACLE" + ",";
+                    msg += "SEND_MSG," + group + "," + tokens[3] + ",";
                     for (auto i = tokens.begin() + 3 ;i != tokens.end(); i++)
                     {
                         msg += *i + " ";
                     }
-                    msg[msg.length()-1] = '\x04';
-                    send(pair.first, msg.c_str(), msg.length(), 0);
-                    break;
-                }
-            }
-        }
-        else if(tokens[1].compare("SECRET2") == 0){
-            for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
-            {
-                if (pair.second->name.compare(tokens[2]) == 0)
-                {
-                    std::string msg, group(GROUP);
-                    msg += '\x01';
-                    msg += "SEND_MSG,ORACLE,";
-                    for (auto i = tokens.begin() + 3 ;i != tokens.end(); i++)
-                    {
-                        msg += *i + " ";
-                    }
-                    msg[msg.length()-1] = '\x04';
+                    msg += '\x04';
                     send(pair.first, msg.c_str(), msg.length(), 0);
                     break;
                 }
@@ -830,6 +812,12 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
             msg += "GET_MSG," + group;
             msg += '\x04';
             send(serverSocket, msg.c_str(), msg.length(), 0);
+        }
+        std::string msg;
+        msg = tokens[0] + " " + tokens[1] + " from : " + servers[serverSocket]->name; 
+        for (auto const &pair : clients)
+        {
+            send(pair.first, msg.c_str(), msg.length(), 0);
         }
     }
     else if ((tokens[0].compare("STATUSREQ") == 0) && (tokens.size() == 2))
