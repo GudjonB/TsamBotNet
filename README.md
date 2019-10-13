@@ -1,7 +1,7 @@
 # Project 3: The Botnet Rises
 
 The program consists of a server and client. The server can be executed on the botnet on skel.ru.is to communicate with other servers running there through a common API. The server can only accept connection with the accompanied client, and commands that can be executed on the server have to be initiated through client. The server timestamps all messages received and sent and writes them in a log file. When the server receives a list of servers from a server he is connecting to, he will try connect to the servers on the list.  
-The accompanied file log.txt has time stamped messages with other groups and the oracle, specific lines have been marked (after they were logged by the program) to highlight messages sent and received from unique groups. 
+The accompanied file logged.txt has time stamped messages with other groups and the oracle, specific lines have been marked (after they were logged by the program) to highlight messages sent and received from unique groups. We also include the file log.txt which contains all messages and the ones from the oracle.
 
 ## Technical information
 
@@ -75,5 +75,5 @@ STATUSREQ <ServerName>
 9. Write `make clean` to remove the output files
 
 ## Authors
-Guðjón Björnsson - gudjon17@ru.is  
-Sölvi Baldursson - solvib11@ru.is
+Guï¿½jï¿½n Bjï¿½rnsson - gudjon17@ru.is  
+Sï¿½lvi Baldursson - solvib11@ru.is

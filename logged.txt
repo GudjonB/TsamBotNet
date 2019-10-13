@@ -114,12 +114,21 @@ Sun Oct 13 17:42:14 2019 SEND_MSG,P3_GROUP_8,P3_GROUP_96,Hello there! :) This is
 Sun Oct 13 17:45:04 2019 SEND_MSG,P3_GROUP_69,P3_GROUP_96,This is an automated message please respond
 Sun Oct 13 17:45:04 2019 SEND_MSG,P3_GROUP_69,P3_GROUP_96,This is an automated message please respond
 Sun Oct 13 17:51:09 2019 SEND_MSG,ORACLE,P3_GROUP_96,
-bc27bcc8b4ebb5835f61dceee4b1ed3e
+bc27bcc8b4ebb5835f61dceee4b1ed3e                      <---- Decryption -->   whiffling           
 Sun Oct 13 17:51:14 2019 SEND_MSG,ORACLE,P3_GROUP_96,
-9ed39e2ea931586b6a985a6942ef573e
+9ed39e2ea931586b6a985a6942ef573e                      <---- Decryption -->   state
 Sun Oct 13 17:51:15 2019 SEND_MSG,ORACLE,P3_GROUP_96,
-efb5803993a803fe4414fa2ca001a84f
+efb5803993a803fe4414fa2ca001a84f                      <---- Decryption -->   away
 Sun Oct 13 17:51:15 2019 SEND_MSG,ORACLE,P3_GROUP_96,
-d782c260658596f870ca9a8be79f4413
+d782c260658596f870ca9a8be79f4413                      <---- Decryption -->   jubjub
 Sun Oct 13 21:30:22 2019 SEND_MSG,P3_GROUP_13,P3_GROUP_96,Hello from Group13              (recv 14)
 Sun Oct 13 21:31:32 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_13,Hello there                      (send 13)
+Sun Oct 13 21:46:31 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_21,AUTOMATED MESSAGE: you have connected to group 96. Please respond to this message :) (send 14)
+Sun Oct 13 21:46:43 2019 SEND_MSG,P3_GROUP_21,P3_GROUP_96,Bestu kveðjur frá group 21 á Ak til group 96                                          (recv 15)
+Sun Oct 13 21:52:26 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_19,AUTOMATED MESSAGE: you have connected to group 96. Please respond to this message :) (send 15)
+Sun Oct 13 21:52:50 2019 SEND_MSG,P3_GROUP_19,P3_GROUP_96,hello                                                                                 (recv 16)
+Sun Oct 13 21:52:26 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_42,AUTOMATED MESSAGE: you have connected to group 96. Please respond to this message :) (send 16)
+Sun Oct 13 22:04:39 2019 SEND_MSG,P3_GROUP_42,P3_GROUP_96,Answer 2 life?                                                                        (recv 17)
+Sun Oct 13 23:06:04 2019 SEND_MSG,P3_GROUP_16,P3_GROUP_96,Ble sadur kv. hopur 16 ak   (recv 18)
+Sun Oct 13 23:08:48 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_16,sahh duds                    (send 17)
+Sun Oct 13 22:22:15 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_2,AUTOMATED MESSAGE: you have connected to group 96. Please respond to this message :)  (send 18)

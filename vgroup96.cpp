@@ -699,20 +699,11 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
     // Handling for receiving server list from servers connecting to us
     else if ((tokens[0].compare("SERVERS") == 0) && (tokens.size() >= 4))
     {
-        // Building a automated message to send to servers that connect to us
-        std::string group(GROUP);
-        std::string greeting = "AUTOMATED MESSAGE: you have connected to group 96. Please respond to this message :)";
-        std::string autoMsg = "";
-        autoMsg = "SEND_MSG," + group + "," + tokens[1] + "," + greeting;
-        autoMsg = '\x01' + autoMsg + '\x04';
-        logger(autoMsg);
-         
         std::cout << "Received SERVERS from: " << tokens[1] << std::endl;
         // Updating the information about the server connecting to us from the information he sent
         servers[serverSocket]->name = tokens[1];
         servers[serverSocket]->ip = tokens[2];
         servers[serverSocket]->port = tokens[3];
-        send(serverSocket, autoMsg.c_str(), autoMsg.length(), 0);
         // In the following loop this server tries to connect to all the other servers that were in the server response up to maxmimum of 5
         for(u_int i = 4; ((i+3) < tokens.size()) && (servers.size() < 5); i += 3){
             int found = 0;
@@ -740,11 +731,6 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
                     servers[newServerSock]->name = tokens[i];
                     *maxfds = std::max(*maxfds, newServerSock);
                     std::cout << "Connected to server on socket: " << newServerSock << std::endl;
-                    autoMsg = "";
-                    autoMsg = "SEND_MSG," + group + "," + tokens[i] + "," + greeting;
-                    autoMsg = '\x01' + autoMsg + '\x04';
-                    send(newServerSock, autoMsg.c_str(), autoMsg.length(), 0);
-                    logger(autoMsg);
                 }
             }
         }
