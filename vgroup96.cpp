@@ -384,6 +384,7 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
         else if(tokens.size() == 3){ // if there are 3 tokens then the server was given by ip and port
             for (auto const &server : servers)
             {
+                std::string msg;
                 if ((server.second->ip == tokens[1]) && (server.second->port == tokens[2]))
                 {
                     serverSock = server.second->sock;
@@ -704,6 +705,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
         std::string autoMsg = "";
         autoMsg = "SEND_MSG," + group + "," + tokens[1] + "," + greeting;
         autoMsg = '\x01' + autoMsg + '\x04';
+        logger(autoMsg);
          
         std::cout << "Received SERVERS from: " << tokens[1] << std::endl;
         // Updating the information about the server connecting to us from the information he sent
@@ -742,6 +744,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
                     autoMsg = "SEND_MSG," + group + "," + tokens[i] + "," + greeting;
                     autoMsg = '\x01' + autoMsg + '\x04';
                     send(newServerSock, autoMsg.c_str(), autoMsg.length(), 0);
+                    logger(autoMsg);
                 }
             }
         }
