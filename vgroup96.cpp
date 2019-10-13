@@ -316,21 +316,15 @@ int connectToServer(std::string portno, std::string ipAddress)
     {
         printf("Failed to set SO_REUSEADDR for port %s\n", portno.c_str());
         perror("setsockopt failed: ");
+        return -1;
     }
 
     if (connect(serverSocket, svr->ai_addr, svr->ai_addrlen) < 0)
     {
-        printf("Failed to open socket to server: %s\n", ipAddress.c_str());
+        printf("Failed to connect to server: %s\n", ipAddress.c_str());
         perror("Connect failed: ");
         return -1;
     }
-
-    // std::string sending = "";
-    // sending += '\x01';
-    // sending += "LISTSERVERS,";
-    // sending += GROUP;
-    // sending += '\x04';
-    // send(serverSocket, sending.c_str(), sending.length(), 0);
 
     return serverSocket;
 }
@@ -516,36 +510,27 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
 
     }
     else if ((tokens[0].compare("GETMSG") == 0) && (tokens.size() == 2))
-    {
-        if (tokens[1] == thisServer.name)
+    {   
+
+        std::string msg = "GET_MSG,";
+        std::string group = tokens[1];
+        msg = '\x01'+ msg + group + '\x04';
+        for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
         {
-            std::string msg = thisServer.getMsg();
-            send(clientSocket, msg.c_str(), msg.length(), 0);
+            send(pair.first, msg.c_str(), msg.length(), 0);
         }
-        else
-        {
-            for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
-            {
-                if (pair.second->name.compare(tokens[1]) == 0)
-                {
-                    std::string msg = pair.second->getMsg();
-                    send(clientSocket, msg.c_str(), msg.length(), 0);
-                    break;
-                }
-            }
-        }
+        
     }
     else if ((tokens[0].compare("GETMSG") == 0) && (tokens[1].compare("FROM") == 1) &&  (tokens.size() == 3))
     {
         std::string msg = "GET_MSG,";
         std::string group(GROUP);
-        msg += '\x01' + group + '\x04';
+        msg = '\x01'+ msg + group + '\x04';
         send(clientSocket, msg.c_str(), msg.length(), 0);
         for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
         {
             if (pair.second->name.compare(tokens[2]) == 0)
             {
-                std::string msg = pair.second->getMsg();
                 send(pair.first, msg.c_str(), msg.length(), 0);
                 break;
             }
@@ -716,7 +701,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
                 std::cout <<"name "+tokens[i] +" port" + tokens[i+2] + " ip" +tokens[i+1] << std::endl;
                 int newServerSock = connectToServer(tokens[i+2],tokens[i+1]);
                 if (newServerSock == -1){
-                    std::string error = "Failed to connect to server...";
+                    std::cout << "Failed to connect to server... " << tokens[i+1] << std::endl;
                 }
                 else{
                     FD_SET(newServerSock, openSockets);
