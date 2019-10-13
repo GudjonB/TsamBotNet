@@ -760,7 +760,16 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
     {
         if (tokens[2] == thisServer.name)
         {
-            std::string msg = "From :" + tokens[1] + " To : " + tokens[2] + " >> ";
+            std::string msg;
+            if(servers[serverSocket]->name != tokens[1])
+            {
+                msg = "Message through: " + servers[serverSocket]->name + "\n From :" + tokens[1] + " To : " + tokens[2] + " >> ";
+            }
+            else
+            {
+                msg = "\nFrom :" + tokens[1] + " To : " + tokens[2] + " >> ";
+            }
+            
             for (auto i = tokens.begin() + 3; i != tokens.end(); i++)
             {
                 msg += *i;
@@ -1057,7 +1066,7 @@ int main(int argc, char *argv[])
                         int bytesRecv;
                         if ((bytesRecv = recv(server->sock, buffer, sizeof(buffer), MSG_DONTWAIT)) == 0)
                         {
-                            printf("Server closed connection: %d", server->sock);
+                            printf("Server closed connection: %s", servers[server->sock]->name.c_str());
                             close(server->sock);
 
                             closeServer(server->sock, &openSockets, &maxfds);
