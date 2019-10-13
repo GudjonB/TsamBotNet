@@ -456,7 +456,7 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
                 }
             }
         }
-        if(tokens[1].compare("SECERET") == 0){
+        else if(tokens[1].compare("SECRET") == 0){
             for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
             {
                 if (pair.second->name.compare(tokens[2]) == 0)
@@ -474,7 +474,7 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
                 }
             }
         }
-        if(tokens[1].compare("SECERET2") == 0){
+        else if(tokens[1].compare("SECRET2") == 0){
             for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
             {
                 if (pair.second->name.compare(tokens[2]) == 0)
