@@ -36,7 +36,7 @@
 #endif
 
 #define BACKLOG 5 // Allowed length of queue of waiting connections
-#define PORT 4101
+#define PORT 4011
 #define GROUP "P3_GROUP_96"
 #define CLIENTAUTH "CLIENT96_1337"
 
