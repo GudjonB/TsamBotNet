@@ -553,6 +553,22 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
             }
         }
     }
+    else if ((tokens[0].compare("GETMSG") == 0) && (tokens[1].compare("FROM") == 1) &&  (tokens.size() == 3))
+    {
+        std::string msg = "GET_MSG,";
+        std::string group(GROUP);
+        msg += '\x01' + group + '\x04';
+        send(clientSocket, msg.c_str(), msg.length(), 0);
+        for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
+        {
+            if (pair.second->name.compare(tokens[2]) == 0)
+            {
+                std::string msg = pair.second->getMsg();
+                send(pair.first, msg.c_str(), msg.length(), 0);
+                break;
+            }
+        }
+    }
     else if ((tokens[0].compare("SERVER") == 0) && (tokens.size() == 3))
     {
         int found = 0;
