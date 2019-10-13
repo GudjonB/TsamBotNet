@@ -797,6 +797,12 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
             msg += '\x04';
             send(serverSocket, msg.c_str(), msg.length(), 0);
         }
+        std::string msg;
+        msg = tokens[0] + " " + tokens[1] + " from : " + servers[serverSocket]->name; 
+        for (auto const &pair : clients)
+        {
+            send(pair.first, msg.c_str(), msg.length(), 0);
+        }
     }
     else if ((tokens[0].compare("STATUSREQ") == 0) && (tokens.size() == 2))
     {
