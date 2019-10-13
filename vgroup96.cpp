@@ -348,7 +348,7 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
         send(clientSocket, msg.c_str(), msg.length(), 0);
         return;
     }
-    if ((tokens[0].compare("CONNECT") == 0) && (tokens.size() == 2))
+    else if ((tokens[0].compare("CONNECT") == 0) && (tokens.size() == 2))
     {
         clients[clientSocket]->name = tokens[1];
     }
