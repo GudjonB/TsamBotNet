@@ -1,6 +1,7 @@
 # Project 3: The Botnet Rises
 
-The program consists of a server and client. The server can be executed on the botnet on skel.ru.is to communicate with other servers running there through a common API. The server can only accept connection with the accompanied client, and commands that can be executed on the server have to be initiated through client.
+The program consists of a server and client. The server can be executed on the botnet on skel.ru.is to communicate with other servers running there through a common API. The server can only accept connection with the accompanied client, and commands that can be executed on the server have to be initiated through client. The server timestamps all messages received and sent and writes them in a log file. When the server receives a list of servers from a server he is connecting to, he will try connect to the servers on the list.  
+The accompanied file log.txt has time stamped messages with other groups and the oracle, specific lines have been marked (after they were logged by the program) to highlight messages sent and received from unique groups. 
 
 ## Technical information
 
@@ -15,7 +16,7 @@ CONNECT <name>
 > Give your client a name 
 
 WHO 
-> Send all connected clients
+> Send the names of all connected clients
 
 LEAVE
 > Disconnect your client from the server
@@ -69,4 +70,13 @@ STATUSREQ <ServerName>
 1. Unpack the assignment in a directory of your choice
 2. Open a terminal in the directory
 3. Write `make` in the terminal to compile the project
-4. Write `make run` 
+4. Write `make run` to start server on port 4096, to use another port write `./tsamvgroup96 <port>`
+5. Open another terminal in the same directory
+6. Write `./client <your ip address> 4096` to connect the client to the server
+7. Write `SERVER <ip address of another server> <port of another server>` in the client and press return to connect to another server
+8. Now you can use the commands listed above to communicate with the connected server
+9. Write `make clean` to remove the output files
+
+## Authors
+Guðjón Björnsson - gudjon17@ru.is  
+Sölvi Baldursson - solvib11@ru.is
