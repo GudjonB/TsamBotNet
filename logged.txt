@@ -1,0 +1,123 @@
+Sun Oct 13 00:48:10 2019 SEND_MSG,P3_GROUP_47,P3_GROUP_96,WASUUP HOMIE          (recv 14)
+Sun Oct 13 04:43:43 2019 SEND_MSG,P3_GROUP_39,P3_GROUP_96,HI,                   (recv 1)
+Sun Oct 13 05:31:36 2019 SEND_MSG,P3_GROUP_75,P3_GROUP_96,hello friend          (recv 2)
+Sun Oct 13 05:32:15 2019 SEND_MSG,P3_GROUP_75,P3_GROUP_96,hello friend
+Sun Oct 13 05:32:25 2019 SEND_MSG,P3_GROUP_75,P3_GROUP_96,King Gaui
+Sun Oct 13 05:33:15 2019 SEND_MSG,P3_GROUP_75,P3_GROUP_96,hello friend
+Sun Oct 13 05:34:15 2019 SEND_MSG,P3_GROUP_75,P3_GROUP_96,hello friend
+Sun Oct 13 05:35:15 2019 SEND_MSG,P3_GROUP_75,P3_GROUP_96,hello friend
+Sun Oct 13 05:36:15 2019 SEND_MSG,P3_GROUP_75,P3_GROUP_96,hello friend
+Sun Oct 13 05:37:15 2019 SEND_MSG,P3_GROUP_75,P3_GROUP_96,hello friend
+Sun Oct 13 05:38:15 2019 SEND_MSG,P3_GROUP_75,P3_GROUP_96,hello friend
+Sun Oct 13 05:39:15 2019 SEND_MSG,P3_GROUP_75,P3_GROUP_96,hello friend
+Sun Oct 13 05:40:15 2019 SEND_MSG,P3_GROUP_75,P3_GROUP_96,hello friend
+Sun Oct 13 05:41:15 2019 SEND_MSG,P3_GROUP_75,P3_GROUP_96,hello friend
+Sun Oct 13 05:42:15 2019 SEND_MSG,P3_GROUP_75,P3_GROUP_96,hello friend
+Sun Oct 13 05:43:15 2019 SEND_MSG,P3_GROUP_75,P3_GROUP_96,hello friend
+Sun Oct 13 08:30:00 2019 SEND_MSG,P3_GROUP_5,P3_GROUP_96,Good morning group 96  (recv 3)
+Sun Oct 13 08:33:15 2019 SEND_MSG,P3_GROUP_5,P3_GROUP_96,Good morning group 96
+Sun Oct 13 11:01:05 2019 SEND_MSG,P3_GROUP_72,P3_GROUP_96,Hello Group 96!       (recv 4)
+Sun Oct 13 11:06:19 2019 SEND_MSG,P3_GROUP_72,P3_GROUP_96,Hi from group 72!
+Sun Oct 13 11:35:45 2019 SEND_MSG,P3_GROUP_14,P3_GROUP_96,Testing testing       (recv 5)
+Sun Oct 13 12:44:32 2019 SEND_MSG,P3_GROUP_8,P3_GROUP_96,hello                  (recv 6)
+Sun Oct 13 13:53:55 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_69,Hello from group 96!  (send 1)
+Sun Oct 13 13:55:14 2019 SEND_MSG,P3_GROUP_69,P3_GROUP_96,HELLO GROUP 96        (recv 7)
+Sun Oct 13 14:05:32 2019 SEND_MSG,ORACLE,P3_GROUP_96,
+Sun Oct 13 14:06:32 2019 SEND_MSG,ORACLE,P3_GROUP_96,
+Sun Oct 13 14:06:49 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_29,Hello from group 96!  (send 2)
+Sun Oct 13 14:10:34 2019 SEND_MSG,ORACLE,P3_GROUP_96,
+Sun Oct 13 14:11:34 2019 SEND_MSG,ORACLE,P3_GROUP_96,
+Sun Oct 13 14:12:09 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_39,hello from group 96!   (send 3)
+Sun Oct 13 14:14:09 2019 SEND_MSG,P3_GROUP_29,P3_GROUP_96,Are you receiving keepalive from the instructor server? (recv 8)
+Sun Oct 13 14:14:31 2019 SEND_MSG,P3_GROUP_39,P3_GROUP_96,yes i can,            
+Sun Oct 13 14:15:26 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_29,I havent noticed any keepalive messages from instructor server
+Sun Oct 13 14:20:03 2019 SEND_MSG,P3_GROUP_27,P3_GROUP_96,This is an autosent message, It does not subsitute human contact (recv 9)
+Sun Oct 13 14:20:54 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_27,Message received       (send 4)
+Sun Oct 13 14:24:20 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_40,sup mate               (send 5)
+Sun Oct 13 14:29:37 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_40,hi
+Sun Oct 13 15:54:21 2019 SEND_MSG,P3_GROUP_96,ORACLE,hi
+Sun Oct 13 15:57:19 2019 SEND_MSG,P3_GROUP_25,P3_GROUP_96,Say Hebbo!...      (recv 10)
+Sun Oct 13 15:57:57 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_25,Hebboo!            (send 6)
+Sun Oct 13 15:59:08 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_25,can you confirm you are getting this msg
+Sun Oct 13 16:00:19 2019 SEND_MSG,P3_GROUP_25,P3_GROUP_96,yes i got your message
+Sun Oct 13 16:00:31 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_25,thnx !
+Sun Oct 13 16:13:04 2019 SEND_MSG,P3_GROUP_96,Instructor_2,hello
+Sun Oct 13 16:20:34 2019 SEND_MSG,ORACLE,P3_GROUP_96,Welcome to the net
+Sun Oct 13 16:22:08 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_40,hello !!
+Sun Oct 13 16:32:13 2019 SEND_MSG,P3_GROUP_96,ORACLE,hi
+Sun Oct 13 16:32:22 2019 SEND_MSG,P3_GROUP_96,ORACLE,hi
+Sun Oct 13 16:32:54 2019 SEND_MSG,P3_GROUP_77,P3_GROUP_96,Heylo             (recv 11)
+Sun Oct 13 16:36:08 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_392,hello
+Sun Oct 13 16:41:12 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_392,hello
+Sun Oct 13 16:47:37 2019 SEND_MSG,P3_GROUP_96,ORACLE,hi
+Sun Oct 13 16:47:39 2019 SEND_MSG,P3_GROUP_8,P3_GROUP_96,Hello there! :)
+Sun Oct 13 16:48:00 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_8,hello :)             (send 7)
+Sun Oct 13 16:50:40 2019 SEND_MSG,P3_GROUP_24,P3_GROUP_96,HI                  (recv 12)
+Sun Oct 13 16:50:53 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_24,hihi                (send 8)
+Sun Oct 13 16:52:09 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_24,have you gotten through to the oracle yet }
+Sun Oct 13 16:52:39 2019 SEND_MSG,P3_GROUP_8,P3_GROUP_96,Hello there! :)
+Sun Oct 13 16:52:55 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_8,hi, have you gotten through to the oracle yet ?
+Sun Oct 13 16:54:16 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_8,was our STATUSRESP correct ?
+Sun Oct 13 16:54:40 2019 SEND_MSG,P3_GROUP_24,P3_GROUP_96,Nope but i should have. group 25 got the hash. i asked jacky in private post on piazza she said it looked right and i should try again..
+Sun Oct 13 16:55:19 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_24,aright we got a hash but didn't have the log on ... so i guess we vill try again
+Sun Oct 13 16:55:29 2019 SEND_MSG,P3_GROUP_8,P3_GROUP_96,Hello there! :)
+Sun Oct 13 16:55:59 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_8,hi, are you reciving this ?? plz respond
+Sun Oct 13 16:56:32 2019 SEND_MSG,P3_GROUP_8,P3_GROUP_96,yes i got your message
+Sun Oct 13 16:56:34 2019 SEND_MSG,P3_GROUP_8,P3_GROUP_96,yes i got your message
+Sun Oct 13 16:56:57 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_24,lovely :)
+Sun Oct 13 16:57:44 2019 SEND_MSG,P3_GROUP_8,P3_GROUP_96,Hello there! :)
+Sun Oct 13 17:00:10 2019 SEND_MSG,P3_GROUP_69,P3_GROUP_96,Did it work? 
+Sun Oct 13 17:00:27 2019 SEND_MSG,P3_GROUP_8,P3_GROUP_96,Hello there! :)
+Sun Oct 13 17:00:55 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_69,no.., di did it look righ ?
+Sun Oct 13 17:01:42 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_69,can you send me the string you recivi
+Sun Oct 13 17:02:02 2019 SEND_MSG,P3_GROUP_69,P3_GROUP_96,The parameters were correct yeah 
+Sun Oct 13 17:02:31 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_69,ok, do you have a msg queue or something ?
+Sun Oct 13 17:03:04 2019 SEND_MSG,P3_GROUP_69,P3_GROUP_96,nope it should work 
+Sun Oct 13 17:03:48 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_69,ok i am going to try something else
+Sun Oct 13 17:04:10 2019 SEND_MSG,P3_GROUP_69,P3_GROUP_96,okay good luck outthere fellow bot! 
+Sun Oct 13 17:04:40 2019 SEND_MSG,P3_GROUP_69,P3_GROUP_96,try sending it the other way around 
+Sun Oct 13 17:04:40 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_69,thnx
+Sun Oct 13 17:05:17 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_69,did that look right ?
+Sun Oct 13 17:05:31 2019 SEND_MSG,P3_GROUP_69,P3_GROUP_96,yeah it looks right 
+Sun Oct 13 17:06:44 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_69,so you are getting SEND_MSG,P3_GROUP_96,P3_GROUP_96 hi ?
+Sun Oct 13 17:07:13 2019 SEND_MSG,P3_GROUP_69,P3_GROUP_96,yeah i am getting hi 
+Sun Oct 13 17:07:47 2019 SEND_MSG,P3_GROUP_96,ORACLE,hello
+Sun Oct 13 17:08:40 2019 SEND_MSG,P3_GROUP_27,P3_GROUP_96,autosentmessage
+Sun Oct 13 17:10:04 2019 SEND_MSG,P3_GROUP_69,P3_GROUP_96,BRB getting a new version 
+Sun Oct 13 17:10:51 2019 SEND_MSG,P3_GROUP_40,P3_GROUP_96,This is an automated message please respond       (recv 13)
+Sun Oct 13 17:10:51 2019 SEND_MSG,P3_GROUP_40,P3_GROUP_96,This is an automated message please respond
+Sun Oct 13 17:11:08 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_40,nice auto
+Sun Oct 13 17:12:20 2019 SEND_MSG,P3_GROUP_40,P3_GROUP_96,yeah from yourself to yourself 
+Sun Oct 13 17:12:46 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_40,was it sent from your server ?
+Sun Oct 13 17:13:02 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_40,i didn't get anything :(
+Sun Oct 13 17:16:53 2019 SEND_MSG,P3_GROUP_69,P3_GROUP_96,This is an automated message please respond
+Sun Oct 13 17:16:53 2019 SEND_MSG,P3_GROUP_69,P3_GROUP_96,This is an automated message please respond
+Sun Oct 13 17:17:09 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_69,hello again
+Sun Oct 13 17:17:32 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_40,ok i'm going to try again
+Sun Oct 13 17:18:53 2019 SEND_MSG,P3_GROUP_69,P3_GROUP_96,oh it's you again! 
+Sun Oct 13 17:20:54 2019 SEND_MSG,P3_GROUP_69,P3_GROUP_96,that is correct 
+Sun Oct 13 17:23:53 2019 SEND_MSG,P3_GROUP_75,P3_GROUP_96,Welcome to the party server!
+Sun Oct 13 17:24:14 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_75,hihi                            (send 9)
+Sun Oct 13 17:24:39 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_96,hello from myself
+Sun Oct 13 17:26:33 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_69,i am getting it sent back from other servers could the msg queue be broken on you end ?
+Sun Oct 13 17:26:59 2019 SEND_MSG,P3_GROUP_69,P3_GROUP_96,i am looking into that now 
+Sun Oct 13 17:28:15 2019 SEND_MSG,P3_GROUP_27,P3_GROUP_96,autosentmessage,from27
+Sun Oct 13 17:32:03 2019 SEND_MSG,P3_GROUP_29,SOLVI,SKIPTI UM SERVER NAME PLEBBI
+Sun Oct 13 17:35:16 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_77,hello                           (send 10)
+Sun Oct 13 17:35:16 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_88,hello                           (send 11)
+Sun Oct 13 17:35:16 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_7,hello                            (send 12)
+Sun Oct 13 17:35:25 2019 SEND_MSG,P3_GROUP_77,P3_GROUP_96,Ellho
+Sun Oct 13 17:36:26 2019 SEND_MSG,P3_GROUP_77,P3_GROUP_96,I do believe we have met before :)
+Sun Oct 13 17:37:45 2019 SEND_MSG,P3_GROUP_69,P3_GROUP_96,This is an automated message please respond
+Sun Oct 13 17:38:23 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_69,this is response
+Sun Oct 13 17:42:14 2019 SEND_MSG,P3_GROUP_8,P3_GROUP_96,Hello there! :) This is an automated message
+Sun Oct 13 17:45:04 2019 SEND_MSG,P3_GROUP_69,P3_GROUP_96,This is an automated message please respond
+Sun Oct 13 17:45:04 2019 SEND_MSG,P3_GROUP_69,P3_GROUP_96,This is an automated message please respond
+Sun Oct 13 17:51:09 2019 SEND_MSG,ORACLE,P3_GROUP_96,
+bc27bcc8b4ebb5835f61dceee4b1ed3e
+Sun Oct 13 17:51:14 2019 SEND_MSG,ORACLE,P3_GROUP_96,
+9ed39e2ea931586b6a985a6942ef573e
+Sun Oct 13 17:51:15 2019 SEND_MSG,ORACLE,P3_GROUP_96,
+efb5803993a803fe4414fa2ca001a84f
+Sun Oct 13 17:51:15 2019 SEND_MSG,ORACLE,P3_GROUP_96,
+d782c260658596f870ca9a8be79f4413

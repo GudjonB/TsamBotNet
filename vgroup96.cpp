@@ -1,9 +1,10 @@
 //
 // Simple chat server for TSAM-409
 //
-// Command line: ./chat_server 4000
+// Command line: ./vgroup96 4096
 //
-// Author: Jacky Mallett (jacky@ru.is)
+// Authors: Guðjón Björnsson (gudjon17@ru.is)
+//          Sölvi Baldursson (solvib@ru.is)
 //
 #include <stdio.h>
 #include <errno.h>
@@ -53,6 +54,10 @@ public:
 
     ~Client() {} // Virtual destructor defined for base class
 };
+
+// Simple class for handling connections from servers.
+//
+// Server(int socket, std::string ipaddr, std::string port) - socket to send/receive traffic from server.
 class Server
 {
 public:
@@ -60,13 +65,14 @@ public:
     std::string name;         // Limit length of name of server's user
     std::string ip;           // the ip of the server
     std::string port;         // the port of the server
-    std::string msgArray[5]; // vector for messages for this server
-    int msgs;
-    int newestMsg;
+    std::string msgArray[5];  // arrayfor messages for this server
+    int msgs;                 // number of valid messages in the array
+    int newestMsg;            // the position of the newest message in the array
 
     Server() : msgs(0), newestMsg(0) {}
     Server(int socket, std::string ipaddr, std::string port) : sock(socket), ip(ipaddr), port(port), msgs(0), newestMsg(0) {}
     ~Server() {} // Virtual destructor defined for base class
+    // Adds messages to the array making it work like a circular buffer
     void addMsg(std::string msg)
     {
         if (msgs >= 5)
@@ -81,6 +87,7 @@ public:
             msgArray[newestMsg] = msg;
         }
     }
+    // removes the newest message from the array and decrements the number of messages
     std::string getMsg()
     {
         if (msgs > 0)
