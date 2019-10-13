@@ -318,6 +318,12 @@ int connectToServer(std::string portno, std::string ipAddress)
         perror("setsockopt failed: ");
         return -1;
     }
+    if (setsockopt(serverSocket, SOL_SOCKET, SOCK_NONBLOCK, &set, sizeof(set)) < 0)
+    {
+        printf("Failed to set SOCK_NONBLOCK for port %s\n", portno.c_str());
+        perror("Failed to set SOCK_NONBLOCK");
+        return -1;
+    }
 
     if (connect(serverSocket, svr->ai_addr, svr->ai_addrlen) < 0)
     {
@@ -325,13 +331,6 @@ int connectToServer(std::string portno, std::string ipAddress)
         perror("Connect failed: ");
         return -1;
     }
-
-    // std::string sending = "";
-    // sending += '\x01';
-    // sending += "LISTSERVERS,";
-    // sending += GROUP;
-    // sending += '\x04';
-    // send(serverSocket, sending.c_str(), sending.length(), 0);
 
     return serverSocket;
 }
