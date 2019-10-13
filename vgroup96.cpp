@@ -516,36 +516,27 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
 
     }
     else if ((tokens[0].compare("GETMSG") == 0) && (tokens.size() == 2))
-    {
-        if (tokens[1] == thisServer.name)
+    {   
+
+        std::string msg = "GET_MSG,";
+        std::string group = tokens[1];
+        msg = '\x01'+ msg + group + '\x04';
+        for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
         {
-            std::string msg = thisServer.getMsg();
-            send(clientSocket, msg.c_str(), msg.length(), 0);
+            send(pair.first, msg.c_str(), msg.length(), 0);
         }
-        else
-        {
-            for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
-            {
-                if (pair.second->name.compare(tokens[1]) == 0)
-                {
-                    std::string msg = pair.second->getMsg();
-                    send(clientSocket, msg.c_str(), msg.length(), 0);
-                    break;
-                }
-            }
-        }
+        
     }
     else if ((tokens[0].compare("GETMSG") == 0) && (tokens[1].compare("FROM") == 1) &&  (tokens.size() == 3))
     {
         std::string msg = "GET_MSG,";
         std::string group(GROUP);
-        msg += '\x01' + group + '\x04';
+        msg = '\x01'+ msg + group + '\x04';
         send(clientSocket, msg.c_str(), msg.length(), 0);
         for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
         {
             if (pair.second->name.compare(tokens[2]) == 0)
             {
-                std::string msg = pair.second->getMsg();
                 send(pair.first, msg.c_str(), msg.length(), 0);
                 break;
             }
