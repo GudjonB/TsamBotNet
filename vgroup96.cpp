@@ -37,7 +37,7 @@
 
 #define BACKLOG 5 // Allowed length of queue of waiting connections
 #define PORT 4101
-#define GROUP "P3_GROUP_96"
+#define GROUP "SOLVI"
 #define CLIENTAUTH "CLIENT96_1337"
 
 // Simple class for handling connections from clients.
@@ -463,11 +463,11 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
                     std::string msg, group(GROUP);
                     msg += '\x01';
                     msg += "SEND_MSG," + tokens[2] + ",";
-                    for (auto i = tokens.begin() + 2 ;i != tokens.end(); i++)
+                    for (auto i = tokens.begin() + 3 ;i != tokens.end(); i++)
                     {
                         msg += *i + " ";
                     }
-                    msg += '\x04';
+                    msg[msg.length()-1] = '\x04';
                     std::cout<< "secret msg sent : " + msg << std::endl; 
                     send(pair.first, msg.c_str(), msg.length(), 0);
                     break;
