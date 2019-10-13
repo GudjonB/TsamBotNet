@@ -113,7 +113,7 @@ int main(int argc, char *argv[])
     {
         bzero(buffer, sizeof(buffer));
         fgets(buffer, sizeof(buffer) - 1, stdin);
-        if (strlen(buffer) == 0){
+        if (strlen(buffer) != 0){
             nwrite = send(serverSocket, buffer, strlen(buffer), 0);
 
             if (nwrite == -1)
