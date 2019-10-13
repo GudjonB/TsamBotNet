@@ -944,6 +944,8 @@ int main(int argc, char *argv[])
                         n--;
 
                         printf("Client connected on server: %d\n", clientSock);
+                        std::string msg("Welcome to Group 96's server !\n");
+                        send(clientSock, msg.c_str(),msg.length(),0);
                         
                     }
                     
@@ -1024,10 +1026,12 @@ int main(int argc, char *argv[])
                         // only triggers if there is something on the socket for us.
                         else
                         {
+                            // PRINT
                             std::cout << "Bytes received: " << bytesRecv << std::endl;
                             std::cout << buffer << std::endl;
                             if ((buffer[0] == '\x01') && (buffer[bytesRecv - 1] == '\x04'))
                             {
+                                // PRINT
                                 std::cout << "Right format" << std::endl;
                                 std::vector<std::string> tokens;
                                 std::string token;
