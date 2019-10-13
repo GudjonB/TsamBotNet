@@ -316,6 +316,7 @@ int connectToServer(std::string portno, std::string ipAddress)
     {
         printf("Failed to set SO_REUSEADDR for port %s\n", portno.c_str());
         perror("setsockopt failed: ");
+        return -1;
     }
 
     if (connect(serverSocket, svr->ai_addr, svr->ai_addrlen) < 0)
@@ -707,7 +708,7 @@ void serverCommand(int serverSocket, fd_set *openSockets, int *maxfds,
                 std::cout <<"name "+tokens[i] +" port" + tokens[i+2] + " ip" +tokens[i+1] << std::endl;
                 int newServerSock = connectToServer(tokens[i+2],tokens[i+1]);
                 if (newServerSock == -1){
-                    std::string error = "Failed to connect to server...";
+                    std::cout << "Failed to connect to server... " << tokens[i+1] << std::endl;
                 }
                 else{
                     FD_SET(newServerSock, openSockets);
