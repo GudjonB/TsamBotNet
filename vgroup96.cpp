@@ -298,7 +298,7 @@ int connectToServer(std::string portno, std::string ipAddress)
     memset(&hints, 0, sizeof(hints));
 
     hints.ai_family = AF_INET; // IPv4 only addresses
-    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_socktype = SOCK_STREAM | SOCK_NONBLOCK;
     hints.ai_flags = AI_PASSIVE;
 
     if (getaddrinfo(ipAddress.c_str(), portno.c_str(), &hints, &svr) != 0)
@@ -318,16 +318,10 @@ int connectToServer(std::string portno, std::string ipAddress)
         perror("setsockopt failed: ");
         return -1;
     }
-    if (setsockopt(serverSocket, SOL_SOCKET, SOCK_NONBLOCK, &set, sizeof(set)) < 0)
-    {
-        printf("Failed to set SOCK_NONBLOCK for port %s\n", portno.c_str());
-        perror("Failed to set SOCK_NONBLOCK");
-        return -1;
-    }
 
     if (connect(serverSocket, svr->ai_addr, svr->ai_addrlen) < 0)
     {
-        printf("Failed to open socket to server: %s\n", ipAddress.c_str());
+        printf("Failed to connect to server: %s\n", ipAddress.c_str());
         perror("Connect failed: ");
         return -1;
     }
