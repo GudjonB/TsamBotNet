@@ -456,6 +456,42 @@ void clientCommand(int clientSocket, fd_set *openSockets, int *maxfds,
                 }
             }
         }
+        if(tokens[1].compare("SECERET") == 0){
+            for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
+            {
+                if (pair.second->name.compare(tokens[2]) == 0)
+                {
+                    std::string msg, group(GROUP);
+                    msg += '\x01';
+                    msg += "SEND_MSG," + group + "," + "ORACLE" + ",";
+                    for (auto i = tokens.begin() + 3 ;i != tokens.end(); i++)
+                    {
+                        msg += *i + " ";
+                    }
+                    msg[msg.length()-1] = '\x04';
+                    send(pair.first, msg.c_str(), msg.length(), 0);
+                    break;
+                }
+            }
+        }
+        if(tokens[1].compare("SECERET2") == 0){
+            for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
+            {
+                if (pair.second->name.compare(tokens[2]) == 0)
+                {
+                    std::string msg, group(GROUP);
+                    msg += '\x01';
+                    msg += "SEND_MSG," + "ORACLE" + ",";
+                    for (auto i = tokens.begin() + 3 ;i != tokens.end(); i++)
+                    {
+                        msg += *i + " ";
+                    }
+                    msg[msg.length()-1] = '\x04';
+                    send(pair.first, msg.c_str(), msg.length(), 0);
+                    break;
+                }
+            }
+        }
         else if(tokens[1].compare("ALL") == 0){
             for (auto const &pair : servers) // to make sure we have the server we want to msg in our map
             {
