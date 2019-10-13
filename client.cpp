@@ -113,8 +113,7 @@ int main(int argc, char *argv[])
     {
         bzero(buffer, sizeof(buffer));
         fgets(buffer, sizeof(buffer) - 1, stdin);
-        std::cout << "strlen : " << strlen(buffer) << std::endl;
-        if (strlen(buffer) != 0){
+        if (*buffer != '\n'){
             nwrite = send(serverSocket, buffer, strlen(buffer), 0);
 
             if (nwrite == -1)
