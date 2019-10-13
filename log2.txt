@@ -1,0 +1,99 @@
+Sat Oct 12 23:08:35 2019 SEND_MSG,ORACLE,P3_GROUP_96,
+
+“The greatest enemy of knowledge is not ignorance, it is the illusion of knowledge.”
+— Stephen Hawking 
+Sat Oct 12 23:08:45 2019 SEND_MSG,P3_GROUP_96,Instructor_1,hellohello
+Sat Oct 12 23:09:35 2019 SEND_MSG,ORACLE,P3_GROUP_96,
+
+“Commenting your code is like cleaning your bathroom — you never want to do it, but it 
+ really does create a more pleasant experience for you and your guests.”
+— Ryan Campbell 
+Sat Oct 12 23:36:40 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_29,Hello from group 96!
+Sat Oct 12 23:39:39 2019 SEND_MSG,P3_GROUP_29,P3_GROUP_96,hellooo
+Sun Oct 13 00:06:15 2019 SEND_MSG,ORACLE,P3_GROUP_96,
+
+“Commenting your code is like cleaning your bathroom — you never want to do it, but it 
+ really does create a more pleasant experience for you and your guests.”
+— Ryan Campbell 
+Sun Oct 13 00:08:08 2019 SEND_MSG,ORACLE,P3_GROUP_96,
+
+“Commenting your code is like cleaning your bathroom — you never want to do it, but it 
+ really does create a more pleasant experience for you and your guests.”
+— Ryan Campbell 
+Sun Oct 13 00:09:08 2019 SEND_MSG,ORACLE,P3_GROUP_96,
+
+“Commenting your code is like cleaning your bathroom — you never want to do it, but it 
+ really does create a more pleasant experience for you and your guests.”
+— Ryan Campbell 
+Sun Oct 13 00:09:12 2019 SEND_MSG,P3_GROUP_96,Instructor_1,ORACL
+Sun Oct 13 00:41:27 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_5,HELLO from 96
+Sun Oct 13 00:41:27 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_47,HELLO from 96
+Sun Oct 13 00:46:43 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_5,Hallo
+Sun Oct 13 00:46:43 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_39,Hallo
+Sun Oct 13 00:46:43 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_72,Hallo
+Sun Oct 13 00:46:43 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_47,Hallo
+Sun Oct 13 00:48:10 2019 SEND_MSG,P3_GROUP_47,P3_GROUP_96,WASUUP HOMIE
+Sun Oct 13 00:49:34 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_47,saahhh dud
+Sun Oct 13 01:07:22 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_5,this is a message
+Sun Oct 13 01:07:22 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_74,this is a message
+Sun Oct 13 01:07:22 2019 SEND_MSG,P3_GROUP_96,Instructor_1,this is a message
+Sun Oct 13 01:07:47 2019 SEND_MSG,ORACLE,P3_GROUP_96,
+
+“The greatest enemy of knowledge is not ignorance, it is the illusion of knowledge.”
+— Stephen Hawking 
+Sun Oct 13 01:08:47 2019 SEND_MSG,ORACLE,P3_GROUP_96,
+
+“Commenting your code is like cleaning your bathroom — you never want to do it, but it 
+ really does create a more pleasant experience for you and your guests.”
+— Ryan Campbell 
+Sun Oct 13 01:26:47 2019 SEND_MSG,ORACLE,P3_GROUP_96,
+
+“Imagination is more important than knowledge.  For knowledge is limited, whereas 
+ imagination embraces the entire world, stimulating progress, giving birth to evolution.”
+— Albert Einstein 
+Sun Oct 13 01:27:47 2019 SEND_MSG,ORACLE,P3_GROUP_96,
+
+“If you automate a mess, you get an automated mess.”
+— Rod Michael 
+Sun Oct 13 01:37:06 2019 SEND_MSG,ORACLE,P3_GROUP_96,
+
+“The greatest enemy of knowledge is not ignorance, it is the illusion of knowledge.”
+— Stephen Hawking 
+Sun Oct 13 01:38:06 2019 SEND_MSG,ORACLE,P3_GROUP_96,
+
+“Commenting your code is like cleaning your bathroom — you never want to do it, but it 
+ really does create a more pleasant experience for you and your guests.”
+— Ryan Campbell 
+Sun Oct 13 01:43:20 2019 SEND_MSG,ORACLE,P3_GROUP_96,
+
+The Internet Oracle has pondered your question deeply. Your question was:
+  Did you say, "Watch the sheeps," or "Wash the sheets"? How can I know
+  which is which? 
+
+And in response, thus spake the Oracle:
+  The sheep are the ones that object when you try to make them fit into
+  the washing machine. 
+Sun Oct 13 01:44:20 2019 SEND_MSG,ORACLE,P3_GROUP_96,
+
+“Imagination is more important than knowledge.  For knowledge is limited, whereas 
+ imagination embraces the entire world, stimulating progress, giving birth to evolution.”
+— Albert Einstein 
+Sun Oct 13 16:18:44 2019 SEND_MSG,ORACLE,P3_GROUP_SOLVI,
+
+"The goal of science and engineering is to build better mousetraps. The goal of nature is to 
+ build better mice."
+ Anonymous 
+Sun Oct 13 16:19:28 2019 SEND_MSG,P3_GROUP_96,P3_GROUP_SOLVI,hello
+Sun Oct 13 16:19:44 2019 SEND_MSG,ORACLE,P3_GROUP_SOLVI,
+
+“Imagination is more important than knowledge.  For knowledge is limited, whereas 
+ imagination embraces the entire world, stimulating progress, giving birth to evolution.”
+— Albert Einstein 
+Sun Oct 13 19:03:25 2019 SEND_MSG,P3_GROUP_75,SOLVI,Welcome to the party server!
+Sun Oct 13 19:03:41 2019 SEND_MSG,Instructor_2,SOLVI,Project group name should be P3_GROUP_XXX (your project group number)
+Sun Oct 13 19:04:58 2019 SEND_MSG,P3_GROUP_75,SOLVI,Welcome to the party server!
+Sun Oct 13 19:07:33 2019 SEND_MSG,P3_GROUP_75,P3_GROUP_96,Welcome to the party server!
+Sun Oct 13 19:08:16 2019 SEND_MSG,ORACLE,P3_GROUP_96,
+
+“If you automate a mess, you get an automated mess.”
+— Rod Michael 
