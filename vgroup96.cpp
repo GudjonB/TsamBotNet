@@ -298,7 +298,7 @@ int connectToServer(std::string portno, std::string ipAddress)
     memset(&hints, 0, sizeof(hints));
 
     hints.ai_family = AF_INET; // IPv4 only addresses
-    hints.ai_socktype = SOCK_STREAM | SOCK_NONBLOCK;
+    hints.ai_socktype = SOCK_STREAM;
     hints.ai_flags = AI_PASSIVE;
 
     if (getaddrinfo(ipAddress.c_str(), portno.c_str(), &hints, &svr) != 0)
